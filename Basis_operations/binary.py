@@ -1,19 +1,35 @@
+""" for a integer n the bin(n) gives "0bxxxx" with the leading 0b represting it is in 
+binary format ; b(n) chops of the leading term """
 def b(n):
     return(bin(n)[2:])
-def tg(l,n):
-    x = 2**(n-1)
-    y = int(l,2)
-    return(bin(y|x))
-def gr(x,y):
-    l = b(0)
-    for i in range(y):
-        l = tg(l,x-i)
-    return l
+"""this function toogles the nth bit of a number in its binary representation
+;it returns a binary string including the leading terms"""
+def tg(l,k):
+    return l ^ (1 << k)
 
-x = int(input("enter the number of orbitals"))
-y = int(input("enter the number of electrons"))
+"""remember here n is the number of orbitals it must be declared 
+somewhere before this block"""
+n = 6
+def c(x,z): #creation operator
+        i_b = z >> (n-x)
+        t = i_b.bit_count()
+        return t%2,tg(z,n-1-x)
 
-print(gr(x,y)[2:])
-
+def a(y,z): # annihilation operator
+        i_b = z >> (n-y)
+        t = i_b.bit_count()
+        return t%2,tg(z,n-1-y)      
+                                                                                                                   
+def ca(x,y,z): #creation and annihilation together 
+    e = ((z>>(n-1-x))&1) #checks if the xth orbital is already occupied or not
+    d = ((z>>(n-1-y))&1) #checks if the yth orbital is already empty or not
+    if e == 1:
+        return None,None
+    elif d == 0:
+        return None,None
     
+    i,i1 = a(y,z) # i tracks phase change from action of annihilation operator 
+    j,j1 = c(x,i1) # j tracks phase change from action of creation operator
+    return (i+j)%2,j1
     
+
