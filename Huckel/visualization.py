@@ -52,12 +52,10 @@ def draw_mo(ax, coeffs, x, N):
         if r < 5e-3:
             ax.plot(cx, cy, 'ko', ms=2.5, zorder=4); continue
         if is_c:
-            hue1   = (cmath.phase(coeff)+math.pi)/(2*math.pi)
-            hue2   = (hue1 + 0.5) % 1.0          # opposite lobe = opposite phase (π shift)
-            color1 = hsv(hue1)
-            color2 = hsv(hue2)
-            ax.add_patch(mpatches.Circle((cx,cy+r), r, color=color1, zorder=3))
-            ax.add_patch(mpatches.Circle((cx,cy-r), r, color=color2, zorder=3))
+            hue  = (cmath.phase(coeff)+math.pi)/(2*math.pi)
+            color = hsv(hue)
+            ax.add_patch(mpatches.Circle((cx,cy+r), r, color=color, zorder=3))
+            ax.add_patch(mpatches.Circle((cx,cy-r), r, color=color, alpha=0.4, zorder=3))
         else:
             cp = '#3B82F6' if coeff >= 0 else '#F97316'
             cn = '#F97316' if coeff >= 0 else '#3B82F6'
