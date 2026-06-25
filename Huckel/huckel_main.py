@@ -6,7 +6,7 @@ def fun(N,x):
   if x == "o":
     eval = []
     for i in range(N):
-      eval.append(2*math.cos((i+1)*math.pi*(1.0/(N+1))))
+      eval.append(math.cos((i+1)*math.pi*(1.0/(N+1))))
     evec = []
     l = []
     for i in range(N):
