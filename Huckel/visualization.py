@@ -5,7 +5,7 @@ import matplotlib.patches as mpatches
 from matplotlib.colors import Normalize
 from matplotlib.cm import ScalarMappable
 import matplotlib.cm as cm
-import huckel_main
+from . import huckel_main
 
 def o_p(N):
     if N == 1: return [(0.0, 0.0)]

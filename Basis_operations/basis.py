@@ -1,3 +1,4 @@
+from functools import cache
 #this function create the ground (reference) state
 def gr(x,y):
   l = [0]*x
@@ -47,6 +48,7 @@ def cisdt(x,y):
       k += 1
   return c3
 #full CI 
+@cache #memoization
 def per(x,y):
   #Base cases
   if y < 0 or y > x:
@@ -89,6 +91,7 @@ def binary_hash(l):
     for i in l:
       j = "".join(str(k) for k in i)
       k.append(int(j,2))
+      k.sort(reverse=True)
     return k
 
 
