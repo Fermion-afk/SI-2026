@@ -2,7 +2,6 @@ import Basis_operations.basis as basis
 import Basis_operations.binary as binary 
 import numpy as np
 import config as con
-import ext_hubbard as ex
 
 def hopp(l): #this gives the action of hopping term on bitstring of l
     def even(l):  #here m denotes the number of orbitals/2

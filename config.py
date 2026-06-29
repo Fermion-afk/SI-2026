@@ -8,7 +8,6 @@ m = 0 #number of sites or atoms
 per = False #cyclic system or not
 x_huc = 0
 
-a = 1 #onsite energy
 b = 1 #hopping parameter
 u = 1 #intrasite repulsion parameter
 
@@ -20,11 +19,8 @@ def hu():
     global n,x_huc
     n = int(input("enter the number of atoms"))
     x_huc = input("""linear open chain system(0)
-                     monocylic(1)
-                     neither(2)""")
-    global a,b
-    a = float(input("Enter the value of onsite energy"))
-    b = float(input("Enter the value of hopping parameter"))
+    monocylic(1)
+    neither(2)""")
 
 def hr():
     global n,k,c,m

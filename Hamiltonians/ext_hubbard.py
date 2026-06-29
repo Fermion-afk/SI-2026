@@ -3,7 +3,7 @@ import math
 import Basis_operations.binary as bi
 import Basis_operations.basis as basis
 import numpy as np
-import hubbard as hub
+from . import hubbard as hub
 
 ohno = math.sqrt(1+(con.u*con.e_r*con.rij/14.397)**2)
 m_n = 1 + (con.u*con.e_r*con.rij/14.397)

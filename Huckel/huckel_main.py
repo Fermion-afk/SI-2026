@@ -45,7 +45,7 @@ def fun_n(m):
 def hu_main():
     x = con.m
     y = con.x_huc
-    if y == 0 or y == 1:    
+    if y == "0" or y == "1":    
         eval,evec = fun(x,y)
         b = input("visualize the orbitals(y/n):").strip().lower()
         if not(b=="y") and not(b=="n"):

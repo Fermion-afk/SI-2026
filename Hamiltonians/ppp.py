@@ -3,7 +3,7 @@ import math
 import Basis_operations.binary as bi
 import Basis_operations.basis as basis
 import numpy as np
-import hubbard as hub
+from . import hubbard as hub
 
 def ext(l):
     k1 = 0
