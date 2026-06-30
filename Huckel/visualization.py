@@ -69,7 +69,6 @@ def draw_mo(ax, coeffs, x, N):
     ax.set_aspect('equal'); ax.axis('off')
 
 def p_o(N, x, tol=1e-6):
-    # huckel_main.fun expects numeric codes: "0" (open) or "1" (closed).
     fun_x = "0" if x == "o" else ("1" if x == "c" else x)
     lams, vecs = huckel_main.fun(N, fun_x)
 
