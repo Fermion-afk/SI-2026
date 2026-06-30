@@ -16,8 +16,8 @@ rij = 1.40e-10 #Bond length
 r = np.zeros((m,m)) #Distance matrix
     
 def hu():
-    global n,x_huc
-    n = int(input("enter the number of atoms"))
+    global m,x_huc
+    m = int(input("enter the number of atoms"))
     x_huc = input("""linear open chain system(0)
     monocylic(1)
     neither(2)""")

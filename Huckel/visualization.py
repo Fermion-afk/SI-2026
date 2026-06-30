@@ -8,12 +8,14 @@ import matplotlib.cm as cm
 from . import huckel_main
 
 def o_p(N):
-    if N == 1: return [(0.5, 0.5)]
-    return [(i/(N-1), 0.0) for i in range(N)]
+    if N == 1: return [(0.0, 0.0)]
+    return [(i, 0.0) for i in range(N)]
 
 def c_p(N):
-    return [(math.cos(math.pi/2 - 2*math.pi*i/N),
-             math.sin(math.pi/2 - 2*math.pi*i/N)) for i in range(N)]
+    pitch = 1.0
+    radius = pitch * N / (2 * math.pi)
+    return [(radius*math.cos(math.pi/2 - 2*math.pi*i/N),
+         radius*math.sin(math.pi/2 - 2*math.pi*i/N)) for i in range(N)]
 
 def energy_l(lam, tol=1e-6):
     if abs(lam) < tol: return r'$\alpha$'
@@ -23,13 +25,17 @@ def energy_l(lam, tol=1e-6):
     return rf'$\alpha {sign} {abs(lam):g}\beta$'
 
 def draw_mo(ax, coeffs, x, N):
-    is_c = x == "c"
+    # accept both the single-letter codes ('o'/'c') and huckel_main's
+    # numeric codes ('0' for open, '1' for closed)
+    is_c = x == "c" or x == "1"
     pos  = c_p(N) if is_c else o_p(N)
     xs   = [p[0] for p in pos]; ys = [p[1] for p in pos]
     xm   = (min(xs)+max(xs))/2;  ym = (min(ys)+max(ys))/2
-    span = max(max(xs)-min(xs), max(ys)-min(ys), 1e-9)
-    def n_(p): return (0.5+(p[0]-xm)/span*0.72, 0.5+(p[1]-ym)/span*0.72)
-    npos = [n_(p) for p in pos]
+    npos = [(p[0]-xm, p[1]-ym) for p in pos]
+
+    margin = 0.6
+    xr = max([abs(p[0]) for p in npos] + [0.1]) + margin
+    yr = max([abs(p[1]) for p in npos] + [0.1]) + margin
 
     for i in range(len(npos)-1):
         ax.plot([npos[i][0],npos[i+1][0]], [npos[i][1],npos[i+1][1]],
@@ -40,7 +46,7 @@ def draw_mo(ax, coeffs, x, N):
 
     mags    = [abs(c) for c in coeffs]
     max_mag = max(mags) if max(mags) > 1e-10 else 1.0
-    R       = 0.13
+    R       = 0.32
     hsv     = plt.get_cmap('hsv')
 
     for (cx,cy), coeff in zip(npos, coeffs):
@@ -48,7 +54,7 @@ def draw_mo(ax, coeffs, x, N):
         if r < 5e-3:
             ax.plot(cx, cy, 'ko', ms=2.5, zorder=4); continue
         if is_c:
-            hue   = (cmath.phase(coeff)+math.pi)/(2*math.pi)
+            hue  = (cmath.phase(coeff)+math.pi)/(2*math.pi)
             color = hsv(hue)
             ax.add_patch(mpatches.Circle((cx,cy+r), r, color=color, zorder=3))
             ax.add_patch(mpatches.Circle((cx,cy-r), r, color=color, alpha=0.4, zorder=3))
@@ -59,11 +65,18 @@ def draw_mo(ax, coeffs, x, N):
             ax.add_patch(mpatches.Circle((cx,cy-r), r, color=cn, zorder=3))
         ax.plot(cx, cy, 'ko', ms=3, zorder=5)
 
-    ax.set_xlim(0,1); ax.set_ylim(0,1)
+    ax.set_xlim(-xr, xr); ax.set_ylim(-yr, yr)
     ax.set_aspect('equal'); ax.axis('off')
 
 def p_o(N, x, tol=1e-6):
-    lams, vecs = huckel_main.fun(N, x)
+    fun_x = "0" if x == "o" else ("1" if x == "c" else x)
+    lams, vecs = huckel_main.fun(N, fun_x)
+
+    # ensure energies are ordered (most bonding/lowest first → most
+    # antibonding/highest last), since huckel_main.fun doesn't guarantee this
+    order = np.argsort(lams)[::-1]      # descending lam = ascending energy (E = α + λβ, β<0)
+    lams  = [lams[k] for k in order]
+    vecs  = [vecs[k] for k in order]
 
     # group degenerate levels (index 0 = lowest energy)
     groups, i = [], 0
@@ -76,7 +89,7 @@ def p_o(N, x, tol=1e-6):
 
     # figure dimensions (inches)
     spec_in = 2.5
-    mo_in   = 1.6          # per MO column
+    mo_in   = min(1.6 + 0.35 * max(0, N - 2), 4.0)     # MO column widens modestly with N, capped
     row_in  = 1.6          # per energy row
     fig_w   = spec_in + max_deg*mo_in + 0.2
     fig_h   = n_grp*row_in + 0.9
@@ -126,7 +139,8 @@ def p_o(N, x, tol=1e-6):
             draw_mo(ax, evec, x, N)
 
     # legend / colorbar
-    if x == "o":
+    # treat both 'o' and '0' as open-chain
+    if x == "o" or x == "0":
         p1 = mpatches.Patch(color='#3B82F6', label='+ phase')
         p2 = mpatches.Patch(color='#F97316', label='− phase')
         fig.legend(handles=[p1,p2], loc='lower right',
@@ -141,7 +155,7 @@ def p_o(N, x, tol=1e-6):
         cbar.set_label('phase', fontsize=7)
         cb_ax.tick_params(labelsize=6)
 
-    sys_str = 'open chain' if x == 'o' else 'closed ring'
+    sys_str = 'open chain' if (x == 'o' or x == '0') else 'closed ring'
     fig.suptitle(f"Hückel MO Diagram  (N={N}, {sys_str})",
                  fontsize=11, fontweight='bold', y=0.998)
 

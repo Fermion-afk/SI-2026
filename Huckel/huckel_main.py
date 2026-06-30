@@ -19,16 +19,18 @@ def fun(N,x):
     return eval,evec
   elif x == "1":
     eval = []
-    for i in range(N):
-      eval.append(math.cos(2*(i)*math.pi*(1.0/N)))
+    for k in range(N):
+        eval.append(2*math.cos(2*math.pi*k/N))
+
     evec = []
-    l = []
-    for i in range(N):
-      for k in range(N):
-        l.append(cmath.exp(2*math.pi*1j*i*(k+1)))
-      evec.append(l)
-      l = []
-    return eval,evec
+
+    for k in range(N):
+        l = []
+        for i in range(N):
+            l.append(cmath.exp(2j*math.pi*i*k/N) / math.sqrt(N))
+        evec.append(l)
+
+    return eval, evec
   else :
      raise ValueError("enter either o or c")
 
@@ -51,7 +53,10 @@ def hu_main():
         if not(b=="y") and not(b=="n"):
             print("invalid input,enter either(y/n):")
         if b == "y":
-            vis.p_o(x,y)
+          # visualization expects 'o' (open) or 'c' (closed);
+          # map the numeric input to the expected characters
+          vis_key = 'o' if y == "0" else ('c' if y == "1" else y)
+          vis.p_o(x, vis_key)
         elif b == "n":
             print(eval)
             print(evec)
