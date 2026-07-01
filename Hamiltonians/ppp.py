@@ -7,9 +7,10 @@ from . import hubbard as hub
 
 def ext(l):
     k1 = 0
+    r = con.r
     for i in range(con.m-1):
         for j in range(i+1, con.m):
-            vij = con.u/math.sqrt(1 + (con.u*con.r[i][j]/14.397)**2)
+            vij = con.u/math.sqrt(1 + (con.u*r[i][j]/14.397)**2)
             k1 += vij*(bi.nus(2*i,l)-1)*(bi.nus(2*j,l)-1)
     return k1
 

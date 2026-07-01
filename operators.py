@@ -19,4 +19,14 @@ def double_occ(evec,i):
     k = bi.nus(i,evec)
     return[k,evec]
 
+def opt():
+    def __init__(self,h):
+        self.opt = h
+    def op(self,l):
+        return op(l)
+
+def post_opt():
+    def __init__(self,h,l):
+        self.opt = h
+        self.vec = l
 

@@ -8,8 +8,9 @@ def numdense(mat):
 
 def scidense(mat):
     evals,evecs = eigh(mat)
+    return evals,evecs
 
 def scispa(mat):
     evals,evecs = eigsh(mat,k=5,which = "SA")
-    return evals,evecs
+    return evals,evecs[:][:4]
 
