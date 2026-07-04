@@ -1,25 +1,25 @@
-import Basis_operations.basis as basis 
-import Basis_operations.binary as binary 
+import Basis_operations.binary as bi
 import numpy as np
 import config as con
+import Basis_operations.operators as op
 
 def hopp(l): #this gives the action of hopping term on bitstring of l
     def even(l):  #here m denotes the number of orbitals/2
         ce = []
         for i in range((con.m)-1):
-            x,y = binary.ca(2*i,2*i+2,l)
+            x,y = bi.ca(2*i,2*i+2,l)
             if y != None:
                 ce.append([x,y])     
-            x1,y1 = binary.ca(2*i+2,2*i,l)
+            x1,y1 = bi.ca(2*i+2,2*i,l)
             if y1 != None:
                 ce.append([x1,y1])   
         if con.per:
             l_u = 2*(con.m - 1)
             f_u = 0
-            x, y = binary.ca(f_u,l_u, l)
+            x, y = bi.ca(f_u,l_u, l)
             if y is not None:
                 ce.append([x, y])
-            x1, y1 = binary.ca(l_u,f_u, l)
+            x1, y1 = bi.ca(l_u,f_u, l)
             if y1 is not None:
                 ce.append([x1, y1])
         if ce == []:
@@ -28,19 +28,19 @@ def hopp(l): #this gives the action of hopping term on bitstring of l
     def odd(l): #here m denotes the number of orbitals/2
         co = []
         for i in range(con.m-1):
-            x,y = binary.ca(2*i+1,2*i+3,l)
+            x,y = bi.ca(2*i+1,2*i+3,l)
             if y != None:
                 co.append([x,y])     
-            x1,y1 = binary.ca(2*i+3,2*i+1,l)
+            x1,y1 = bi.ca(2*i+3,2*i+1,l)
             if y1 != None:
                 co.append([x1,y1])   
         if con.per:
             last_dn = 2*(con.m - 1) + 1
             first_dn = 1
-            x, y = binary.ca(first_dn, last_dn, l)
+            x, y = bi.ca(first_dn, last_dn, l)
             if y is not None:
                 co.append([x, y])
-            x1, y1 = binary.ca(last_dn, first_dn, l)
+            x1, y1 = bi.ca(last_dn, first_dn, l)
             if y1 is not None:
                 co.append([x1, y1])
         if co == []:
@@ -59,8 +59,8 @@ def hopp(l): #this gives the action of hopping term on bitstring of l
 def hub(l): # this gives the action of hubbard term on bitstring of l 
     k2 = 0
     for i in range(con.m):
-        k1 = binary.nu(2*i,l)*(binary.nu(2*i+1,l))
-        if k1 == 1:
+        k1 = bi.nus(2*i,l)
+        if k1 == 2:
             k2 += 1
     return k2
 
@@ -69,7 +69,7 @@ def dp(l1,l2):
         if i[1] == l1:
             return (-1)**i[0]
     return 0
-        
+
 def main_hub():
     bas = con.ba
     mat1 = np.zeros((con.c,con.c))
@@ -77,7 +77,10 @@ def main_hub():
         for j in range(con.c):
             hop = hopp(bas[j])
             if i == j:
-                mat1[i][j] = hub(bas[j])*con.u  # diagonal
+                if con.run2:
+                    mat1[i][j] = hub(bas[j])*con.u + op.fi_re(con.x_f,con.y_f,bas[j]) #stark effect
+                else:
+                    mat1[i][j] = hub(bas[j])*con.u  # diagonal
             else:
                 if hop is not None:
                     mat1[i][j] = dp(bas[i], hop)*con.b  # off-diagonal

@@ -1,9 +1,9 @@
-import numpy as np
+from numpy import linalg
 from scipy.linalg import eigh
 from scipy.sparse.linalg import eigsh
 
 def numdense(mat):
-    evals,evecs = np.linalg.eigh(mat)
+    evals,evecs = linalg.eigh(mat)
     return evals,evecs
 
 def scidense(mat):
@@ -12,5 +12,5 @@ def scidense(mat):
 
 def scispa(mat):
     evals,evecs = eigsh(mat,k=7,which = "SA")
-    return evals,evecs[:][:6]
+    return evals,evecs[:,:6]
 

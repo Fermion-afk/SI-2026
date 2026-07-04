@@ -4,6 +4,7 @@ import Basis_operations.binary as bi
 import Basis_operations.basis as basis
 import numpy as np
 from . import hubbard as hub
+import Basis_operations.operators as op
 
 def ext(l):
     k1 = 0
@@ -20,7 +21,10 @@ def main_ppp():
     for i in range(con.c):
         for j in range(i, con.c):
             if i == j:
-                mat1[i][j] = hub.hub(bas[j])*con.u + ext(bas[j])
+                if con.run2:
+                    mat1[i][j] = hub.hub(bas[j])*con.u + ext(bas[j]) + op.fi_re(con.x_f,con.y_f,bas[j])
+                else:
+                    mat1[i][j] = hub.hub(bas[j])*con.u + ext(bas[j])
             else:
                 hop = hub.hopp(bas[j])
                 if hop is not None:

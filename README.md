@@ -1,5 +1,11 @@
-##Important
-we index the orbitals as 0,1,2...n-1 if n is the number of spin orbitals
+### Conventions
+1. $t$ the hopping parameter is taken to be negative, U intrasite repulsion parameter is taken to be positive  
+2. we index the spin orbitals as 0,1,2...n-1 if n is the number of spin orbitals, the 0th orbital is $\alpha$ spin orbital   
+3. 
+
+### Standard Parameters used in Literature
+1. U = 8eV and t = -2.4  
+2. U = 11.13eV and t = -2.4
 
 ## Structure of this Repo
 there are three folder in this repo 
