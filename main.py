@@ -29,7 +29,15 @@ def ham():
             if y == "1":
                 y_ = int(input("enter which state(ground->0,first excited state->1 so on...):"))
                 print(op.expval(op.double_occ,ve[:,y_]))  
-            
+            t = input("would u like to find the dipole moment")
+            if t == "1":
+                t1 = input("x(0) or y(1):")
+                if t1 == "0":
+                    y_ = int(input("enter which state(ground->0,first excited state->1 so on...):"))
+                    print(op.expval(op.dm_x,ve[:,y_]))          
+                else:
+                    y_ = int(input("enter which state(ground->0,first excited state->1 so on...):"))
+                    print(op.expval(op.dm_y,ve[:,y_]))   
         case "ehr":
             import Hamiltonians.hubbard as hub 
             import Hamiltonians.ext_hubbard as ex
@@ -42,6 +50,19 @@ def ham():
             if x == "1":
                 print(va)
                 print(ve[:6][:])
+            y = input("Would u like to find the double occupancy of the states(0/1)")
+            if y == "1":
+                y_ = int(input("enter which state(ground->0,first excited state->1 so on...):"))
+                print(op.expval(op.double_occ,ve[:,y_]))  
+            t = input("would u like to find the dipole moment")
+            if t == "1":
+                t1 = input("x(0) or y(1):")
+                if t1 == "0":
+                    y_ = int(input("enter which state(ground->0,first excited state->1 so on...):"))
+                    print(op.expval(op.dm_x,ve[:,y_]))          
+                else:
+                    y_ = int(input("enter which state(ground->0,first excited state->1 so on...):"))
+                    print(op.expval(op.dm_y,ve[:,y_]))
             
         case "p":
             import Hamiltonians.hubbard as hub 
@@ -55,5 +76,18 @@ def ham():
             if x == "1":
                 print(va)
                 print(ve)
+            y = input("Would u like to find the double occupancy of the states(0/1)")
+            if y == "1":
+                y_ = int(input("enter which state(ground->0,first excited state->1 so on...):"))
+                print(op.expval(op.double_occ,ve[:,y_]))  
+            t = input("would u like to find the dipole moment")
+            if t == "1":
+                t1 = input("x(0) or y(1):")
+                if t1 == "0":
+                    y_ = int(input("enter which state(ground->0,first excited state->1 so on...):"))
+                    print(op.expval(op.dm_x,ve[:,y_]))          
+                else:
+                    y_ = int(input("enter which state(ground->0,first excited state->1 so on...):"))
+                    print(op.expval(op.dm_y,ve[:,y_]))
 
 ham()
