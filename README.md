@@ -1,11 +1,19 @@
-### Conventions
+### Units 
+1. $t$, $U$,$V_{ij}$ and the energy eigenvalues $\rightarrow$ eV  
+2. Bond lenghts and coordinates $\rightarrow$ $\AA$
+3. Electric field $\rightarrow$ $e/{\AA}^{-2}$
+4. Dipole Moment $\rightarrow$ $e\AA$
+5. Polarizability $\rightarrow$ $\AA^3$
+6. First and second hyperpolarizability $\rightarrow$ $e\AA^3/V^2$ and $e\AA^4/V^3$ respectively 
+### Conventions and Constants
+1. Ohno constant = 14.397 ev.$\AA$
 1. $t$ the hopping parameter is taken to be negative, U intrasite repulsion parameter is taken to be positive  
 2. we index the spin orbitals as 0,1,2...n-1 if n is the number of spin orbitals, the 0th orbital is $\alpha$ spin orbital   
 3. 
 
 ### Standard Parameters used in Literature
-1. U = 8eV and t = -2.4  
-2. U = 11.13eV and t = -2.4
+1. U = 8eV and t = -2.4eV 
+2. U = 11.13eV and t = -2.4eV
 
 ## Structure of this Repo
 there are three folder in this repo 

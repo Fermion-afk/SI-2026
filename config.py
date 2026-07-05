@@ -43,7 +43,7 @@ def hr():
     k = int(input("enter the number of electrons"))
     c = comb(n,k)
     m = n//2
-    global b,u,ba,per,run2
+    global b,u,ba,per,run2,cords
     b = float(input("enter the value of hopping parameter:"))
     u = float(input("enter the value of intrasite repulsion parameter:"))
     per = int(input("is the system linear open chain or closed monocyclic(0/1)"))
@@ -53,7 +53,8 @@ def hr():
         global x_f,y_f
         x_f = float(input("enter the x component of the field"))
         y_f = float(input("enter the y component of the field"))
-        
+        incords()
+
 def ehr():
     global n,k,c,m
     n = int(input("enter the number of spin orbitals:"))

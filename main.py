@@ -23,7 +23,7 @@ def ham():
             va,ve = di.scispa(mat)
             x = input("Print the eigenvectors and eigenvalues(0/1):")
             if x == "1":
-                print(fmt(va))
+                print(va)
                 print(ve)
             y = input("Would u like to find the double occupancy of the states(0/1)")
             if y == "1":
@@ -37,12 +37,11 @@ def ham():
             import Basis_operations.operators as op
             con.ehr()
             mat = ex.main_ext()
-            print(mat)
             va,ve = di.scispa(mat)
             x = input("Print the eigenvectors and eigenvalues(0/1):")
             if x == "1":
-                print(fmt(va))
-                print(ve)
+                print(va)
+                print(ve[:6][:])
             
         case "p":
             import Hamiltonians.hubbard as hub 
@@ -54,7 +53,7 @@ def ham():
             va,ve = di.scispa(mat)
             x = input("Print the eigenvectors and eigenvalues(0/1):")
             if x == "1":
-                print(fmt(va))
+                print(va)
                 print(ve)
 
 ham()
