@@ -31,13 +31,9 @@ def ham():
                 print(op.expval(op.double_occ,ve[:,y_]))  
             t = input("would u like to find the dipole moment")
             if t == "1":
-                t1 = input("x(0) or y(1):")
-                if t1 == "0":
-                    y_ = int(input("enter which state(ground->0,first excited state->1 so on...):"))
-                    print(op.expval(op.dm_x,ve[:,y_]))          
-                else:
-                    y_ = int(input("enter which state(ground->0,first excited state->1 so on...):"))
-                    print(op.expval(op.dm_y,ve[:,y_]))   
+                y_ = int(input("enter which state(ground->0,first excited state->1 so on...):"))
+                print(op.expval(op.dm_x,ve[:,y_]))          
+                print(op.expval(op.dm_y,ve[:,y_]))   
         case "ehr":
             import Hamiltonians.hubbard as hub 
             import Hamiltonians.ext_hubbard as ex
@@ -56,13 +52,9 @@ def ham():
                 print(op.expval(op.double_occ,ve[:,y_]))  
             t = input("would u like to find the dipole moment")
             if t == "1":
-                t1 = input("x(0) or y(1):")
-                if t1 == "0":
-                    y_ = int(input("enter which state(ground->0,first excited state->1 so on...):"))
-                    print(op.expval(op.dm_x,ve[:,y_]))          
-                else:
-                    y_ = int(input("enter which state(ground->0,first excited state->1 so on...):"))
-                    print(op.expval(op.dm_y,ve[:,y_]))
+                y_ = int(input("enter which state(ground->0,first excited state->1 so on...):"))
+                print(op.expval(op.dm_x,ve[:,y_]))          
+                print(op.expval(op.dm_y,ve[:,y_])) 
             
         case "p":
             import Hamiltonians.hubbard as hub 
@@ -82,12 +74,8 @@ def ham():
                 print(op.expval(op.double_occ,ve[:,y_]))  
             t = input("would u like to find the dipole moment")
             if t == "1":
-                t1 = input("x(0) or y(1):")
-                if t1 == "0":
-                    y_ = int(input("enter which state(ground->0,first excited state->1 so on...):"))
-                    print(op.expval(op.dm_x,ve[:,y_]))          
-                else:
-                    y_ = int(input("enter which state(ground->0,first excited state->1 so on...):"))
-                    print(op.expval(op.dm_y,ve[:,y_]))
+                y_ = int(input("enter which state(ground->0,first excited state->1 so on...):"))
+                print(op.expval(op.dm_x,ve[:,y_]))          
+                print(op.expval(op.dm_y,ve[:,y_])) 
 
 ham()
