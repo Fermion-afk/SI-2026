@@ -39,15 +39,18 @@ def t_dm(l1, l2, x):
         
 def degen_sub_dia(va,ve):
     k = degen(va)
-    ve_dash = ve[:,:k]
-    mat = np.zeros((k,k))
-    for i in range(k):
-        for j in range(k):
-            mat[i,j] = perb.di(ve_dash[:,i],ve_dash[:,j])
-    val,vec = main_1.dia(mat)
-    ve_corr = ve_dash @ vec 
-    E_corr = np.array([va[0] + val[i] for i in range(k)])
-    return E_corr, ve_corr ,k
+    if k != 1:
+        ve_dash = ve[:,:k]
+        mat = np.zeros((k,k))
+        for i in range(k):
+            for j in range(k):
+                mat[i,j] = perb.di(ve_dash[:,i],ve_dash[:,j])
+        val,vec = main_1.dia(mat)
+        ve_corr = ve_dash @ vec 
+        E_corr = np.array([va[0] + val[i] for i in range(k)])
+        return E_corr, ve_corr ,k
+    else: 
+        return va[0],ve[:,0],1
     
 va_d, ve_d, k = degen_sub_dia(con.va, con.ve)
 va_nd = con.va[k:]

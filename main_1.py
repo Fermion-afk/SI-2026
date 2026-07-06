@@ -34,7 +34,7 @@ def huckel():
     if con.s == 0:
         import Hamiltonians.huckel as hu
         import Basis_operations.operators as op
-        con.hu
+        con.hu()
         mat = hu.main_huckel()
         va,ve = dia(mat)
         x = input("Print the eigenvectors and eigenvalues(0/1):")

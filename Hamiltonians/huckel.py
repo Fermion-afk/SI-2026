@@ -1,6 +1,6 @@
 import numpy as np
 import config as con
-import hubbard as hb
+import Hamiltonians.hubbard as hb
 import Basis_operations.binary as bi
 import Basis_operations.operators as op
 

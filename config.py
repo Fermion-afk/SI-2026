@@ -43,12 +43,11 @@ def hu():
     (1)monocylic
     (2)neither""")
     elif s == 0:
-        global n,k,c,m
+        global n,k,c,m,b,a,ba,per,run2,cords
         n = int(input("enter the number of spin orbitals:"))
         k = int(input("enter the number of electrons"))
         c = comb(n,k)
         m = n//2
-        global b,a,ba,per,run2,cords
         b = float(input("enter the value of hopping parameter:"))
         a = float(input("enter the value of onsite energy :"))
         per = int(input("is the system linear open chain or closed monocyclic(0/1)"))
@@ -61,12 +60,11 @@ def hu():
             incords()
 
 def hr():
-    global n,k,c,m
+    global n,k,c,m,b,u,ba,per,run2,cords
     n = int(input("enter the number of spin orbitals:"))
     k = int(input("enter the number of electrons"))
     c = comb(n,k)
     m = n//2
-    global b,u,ba,per,run2,cords
     b = float(input("enter the value of hopping parameter:"))
     u = float(input("enter the value of intrasite repulsion parameter:"))
     per = int(input("is the system linear open chain or closed monocyclic(0/1)"))
@@ -79,12 +77,11 @@ def hr():
         incords()
 
 def ehr():
-    global n,k,c,m
+    global n,k,c,m,b,u,ba,per,r,cords,run2
     n = int(input("enter the number of spin orbitals:"))
     k = int(input("enter the number of electrons"))
     c = comb(n,k)
     m = n//2
-    global b,u,ba,per,r,cords,run2
     b = float(input("enter the value of hopping parameter:"))
     u = float(input("enter the value of intrasite repulsion parameter:"))
     per = int(input("is the system linear open chain or closed monocyclic(0/1)"))
