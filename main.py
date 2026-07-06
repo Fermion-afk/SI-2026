@@ -1,11 +1,30 @@
-import numpy as np
 import config as con
 from time import perf_counter as perf
 
 run = input("Which Model Hamiltonian Would you like to Use(Huckel(hu)/Hubbard(hr)/Extended Hubbard(ehr)/PPP(p):)")
 
 def fmt(evals, decimals=4, tol=1e-10):
+    import numpy as np
     return np.where(np.abs(evals) < tol, 0.0, np.round(evals.real, decimals))
+
+def dia(mat):
+    x = input("complete spectrum(0) or lowest k eigenvalues(1)")
+    if x == "1":
+        import config as con
+        from scipy.sparse.linalg import eigsh
+        k = int(input(f"enter the value of k < {con.m}"))
+        def scispa(mat,k):
+            evals,evecs = eigsh(mat,k,which = "SA")
+            return evals,evecs
+        return scispa(mat,k)
+    elif x == "0":
+        from numpy import linalg
+        def numdense(mat):
+            evals,evecs = linalg.eigh(mat)
+            return evals,evecs
+        return numdense(mat)
+    else:
+        raise ValueError("Please enter either 0 or 1.")
 
 def ham():
     match run:
@@ -16,11 +35,10 @@ def ham():
 
         case "hr":
             import Hamiltonians.hubbard as hub 
-            import Basis_operations.diagonalization as di
             import Basis_operations.operators as op
             con.hr()
             mat = hub.main_hub()
-            va,ve = di.scispa(mat)
+            va,ve = dia(mat)
             x = input("Print the eigenvectors and eigenvalues(0/1):")
             if x == "1":
                 print(va)
@@ -37,11 +55,10 @@ def ham():
         case "ehr":
             import Hamiltonians.hubbard as hub 
             import Hamiltonians.ext_hubbard as ex
-            import Basis_operations.diagonalization as di
             import Basis_operations.operators as op
             con.ehr()
             mat = ex.main_ext()
-            va,ve = di.scispa(mat)
+            va,ve = dia(mat)
             x = input("Print the eigenvectors and eigenvalues(0/1):")
             if x == "1":
                 print(va)
@@ -59,11 +76,10 @@ def ham():
         case "p":
             import Hamiltonians.hubbard as hub 
             import Hamiltonians.ppp as p 
-            import Basis_operations.diagonalization as di
             import Basis_operations.operators as op
             con.p()
             mat = p.main_ppp()
-            va,ve = di.scispa(mat)
+            va,ve = dia(mat)
             x = input("Print the eigenvectors and eigenvalues(0/1):")
             if x == "1":
                 print(va)

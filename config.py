@@ -20,6 +20,8 @@ ba = [] #basis set
 x_f = 0
 y_f = 0
 
+global va,ve
+
 def incords():
     global cords
     cords = []
