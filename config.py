@@ -10,6 +10,7 @@ per = False #cyclic system or not
 x_huc = 0
 run2 = 0
 
+a = 0
 b = 1 #hopping parameter
 u = 1 #intrasite repulsion parameter
 
@@ -19,6 +20,7 @@ cords = [] #system coordinates
 ba = [] #basis set
 x_f = 0
 y_f = 0
+s = 0
 
 global va,ve
 
@@ -31,13 +33,32 @@ def incords():
     cords = np.array(cords)
     
 def hu():
-    global m,x_huc,run2
-    m = int(input("enter the number of atoms"))
-    x_huc = input(
-    """(0)linear open chain system
-(1)monocylic
-(2)neither""")
-    run2 = int(input("Static field response(Yes:1/No:0)"))
+    global s
+    s = int(input("enter:"))
+    if s == 1:
+        global m,x_huc,run2
+        m = int(input("enter the number of atoms"))
+        x_huc = input(
+        """(0)linear open chain system
+    (1)monocylic
+    (2)neither""")
+    elif s == 0:
+        global n,k,c,m
+        n = int(input("enter the number of spin orbitals:"))
+        k = int(input("enter the number of electrons"))
+        c = comb(n,k)
+        m = n//2
+        global b,a,ba,per,run2,cords
+        b = float(input("enter the value of hopping parameter:"))
+        a = float(input("enter the value of onsite energy :"))
+        per = int(input("is the system linear open chain or closed monocyclic(0/1)"))
+        ba = bi.binary_hash(bi.per(n,k))
+        run2 = int(input("Static field response(Yes:1/No:0)"))
+        if run2:
+            global x_f,y_f
+            x_f = float(input("enter the x component of the field"))
+            y_f = float(input("enter the y component of the field"))
+            incords()
 
 def hr():
     global n,k,c,m
@@ -90,6 +111,7 @@ def p():
     per = int(input("is the system linear open chain or closed monocyclic(0/1)"))
     run2 = int(input("Static field response(Yes:1/No:0)"))
     if run2:
+        run3 = int(input("Finite difference or SOS(0/1):"))
         global x_f,y_f
         x_f = float(input("enter the x component of the field"))
         y_f = float(input("enter the y component of the field"))

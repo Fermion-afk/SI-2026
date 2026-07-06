@@ -1,6 +1,6 @@
 import config as con
 import Basis_operations.operators as op
-import main 
+import main_1 
 import numpy as np
 from functools import cache
 
@@ -44,7 +44,7 @@ def degen_sub_dia(va,ve):
     for i in range(k):
         for j in range(k):
             mat[i,j] = perb.di(ve_dash[:,i],ve_dash[:,j])
-    val,vec = main.dia(mat)
+    val,vec = main_1.dia(mat)
     ve_corr = ve_dash @ vec 
     E_corr = np.array([va[0] + val[i] for i in range(k)])
     return E_corr, ve_corr ,k
