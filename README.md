@@ -1,7 +1,7 @@
 ### Units 
 1. $t$, $U$,$V_{ij}$ and the energy eigenvalues $\rightarrow$ eV  
 2. Bond lenghts and coordinates $\rightarrow$ $\AA$
-3. Electric field $\rightarrow$ $e/{\AA}^{-2}$
+3. Electric field $\rightarrow$ $V/{\AA}$
 4. Dipole Moment $\rightarrow$ $e\AA$
 5. Polarizability $\rightarrow$ $e\AA^2/V$
 6. First and second hyperpolarizability $\rightarrow$ $e\AA^3/V^2$ and $e\AA^4/V^3$ respectively   

@@ -1,30 +1,35 @@
 import config as con
 from time import perf_counter as perf
-
-run = input("Which Model Hamiltonian Would you like to Use(Huckel(hu)/Hubbard(hr)/Extended Hubbard(ehr)/PPP(p):)")
+if __name__ == "__main__":
+    run = input("Which Model Hamiltonian Would you like to Use(Huckel(hu)/Hubbard(hr)/Extended Hubbard(ehr)/PPP(p):)")
 
 def fmt(evals, decimals=4, tol=1e-10):
     import numpy as np
     return np.where(np.abs(evals) < tol, 0.0, np.round(evals.real, decimals))
 
 def dia(mat):
-    x = input("complete spectrum(0) or lowest k eigenvalues(1)")
-    if x == "1":
-        import config as con
-        from scipy.sparse.linalg import eigsh
-        k = int(input(f"enter the value of k < {con.m}"))
-        def scispa(mat,k):
-            evals,evecs = eigsh(mat,k,which = "SA")
-            return evals,evecs
-        return scispa(mat,k)
-    elif x == "0":
+    if __name__ ==  "__main__":
+        x = input("complete spectrum(0) or lowest k eigenvalues(1)")
+        if x == "1":
+            import config as con
+            from scipy.sparse.linalg import eigsh
+            k = int(input(f"enter the value of k < {con.m}"))
+            def scispa(mat,k):
+                evals,evecs = eigsh(mat,k,which = "SA")
+                return evals,evecs
+            return scispa(mat,k)
+        elif x == "0":
+            from numpy import linalg
+            def numdense(mat):
+                evals,evecs = linalg.eigh(mat)
+                return evals,evecs
+            return numdense(mat)
+        else:
+            raise ValueError("Please enter either 0 or 1.")
+    else: 
         from numpy import linalg
-        def numdense(mat):
-            evals,evecs = linalg.eigh(mat)
-            return evals,evecs
-        return numdense(mat)
-    else:
-        raise ValueError("Please enter either 0 or 1.")
+        evals,evecs = linalg.eigh(mat)
+        return evals,evecs
 
 def huckel():
     if con.s == 1:
@@ -37,6 +42,7 @@ def huckel():
         con.hu()
         mat = hu.main_huckel()
         va,ve = dia(mat)
+        con.va,con.ve = va,ve
         x = input("Print the eigenvectors and eigenvalues(0/1):")
         if x == "1":
             print(va)
@@ -50,6 +56,9 @@ def huckel():
             y_ = int(input("enter which state(ground->0,first excited state->1 so on...):"))
             print(op.expval(op.dm_x,ve[:,y_]))          
             print(op.expval(op.dm_y,ve[:,y_]))
+        if con.run3 == 1:
+            import finite_respones as fr
+            fr.run(con.va, con.ve)
 
 def hubbard():
     import Hamiltonians.hubbard as hub 
@@ -57,6 +66,7 @@ def hubbard():
     con.hr()
     mat = hub.main_hub()
     va,ve = dia(mat)
+    con.va,con.ve = va,ve
     x = input("Print the eigenvectors and eigenvalues(0/1):")
     if x == "1":
         print(va)
@@ -70,6 +80,9 @@ def hubbard():
         y_ = int(input("enter which state(ground->0,first excited state->1 so on...):"))
         print(op.expval(op.dm_x,ve[:,y_]))          
         print(op.expval(op.dm_y,ve[:,y_]))
+    if con.run3 == 1:
+        import finite_respones as fr
+        fr.run(con.va, con.ve)
 
 def extended_hubbard():
     import Hamiltonians.hubbard as hub 
@@ -78,6 +91,7 @@ def extended_hubbard():
     con.ehr()
     mat = ex.main_ext()
     va,ve = dia(mat)
+    con.va,con.ve = va,ve
     x = input("Print the eigenvectors and eigenvalues(0/1):")
     if x == "1":
         print(va)
@@ -91,6 +105,9 @@ def extended_hubbard():
         y_ = int(input("enter which state(ground->0,first excited state->1 so on...):"))
         print(op.expval(op.dm_x,ve[:,y_]))          
         print(op.expval(op.dm_y,ve[:,y_]))
+    if con.run3 == 1:
+        import finite_respones as fr
+        fr.run(con.va, con.ve)
 
 def ppp():
     import Hamiltonians.hubbard as hub 
@@ -99,6 +116,7 @@ def ppp():
     con.p()
     mat = p.main_ppp()
     va,ve = dia(mat)
+    con.va,con.ve = va,ve
     x = input("Print the eigenvectors and eigenvalues(0/1):")
     if x == "1":
         print(va)
@@ -112,8 +130,10 @@ def ppp():
         y_ = int(input("enter which state(ground->0,first excited state->1 so on...):"))
         print(op.expval(op.dm_x,ve[:,y_]))          
         print(op.expval(op.dm_y,ve[:,y_])) 
+    if con.run3 == 1:
+        import finite_respones as fr
+        fr.run(con.va, con.ve)
         
-
 def ham():
     match run:
         case "hu":
@@ -125,4 +145,6 @@ def ham():
         case "p":
             ppp()
 
-ham()
+if __name__ == "__main__":
+    ham()
+

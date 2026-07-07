@@ -9,6 +9,7 @@ m = 0 #number of sites or atoms
 per = False #cyclic system or not
 x_huc = 0
 run2 = 0
+run3 = 0
 
 a = 0
 b = 1 #hopping parameter
@@ -23,6 +24,8 @@ y_f = 0
 s = 0
 
 global va,ve
+va = []
+ve = []
 
 def incords():
     global cords
@@ -34,16 +37,15 @@ def incords():
     
 def hu():
     global s
+    global n,k,c,m,b,a,ba,per,run2,cords,x_huc,run3
     s = int(input("enter:"))
     if s == 1:
-        global m,x_huc,run2
         m = int(input("enter the number of atoms"))
         x_huc = input(
         """(0)linear open chain system
     (1)monocylic
     (2)neither""")
     elif s == 0:
-        global n,k,c,m,b,a,ba,per,run2,cords
         n = int(input("enter the number of spin orbitals:"))
         k = int(input("enter the number of electrons"))
         c = comb(n,k)
@@ -54,13 +56,15 @@ def hu():
         ba = bi.binary_hash(bi.per(n,k))
         run2 = int(input("Static field response(Yes:1/No:0)"))
         if run2:
-            global x_f,y_f
-            x_f = float(input("enter the x component of the field"))
-            y_f = float(input("enter the y component of the field"))
-            incords()
+            run3 = int(input("Finite difference or SOS(0/1):"))
+            if run3 == 0:
+                global x_f,y_f
+                x_f = float(input("enter the x component of the field"))
+                y_f = float(input("enter the y component of the field"))
+                incords()
 
 def hr():
-    global n,k,c,m,b,u,ba,per,run2,cords
+    global n,k,c,m,b,u,ba,per,run2,cords,run3
     n = int(input("enter the number of spin orbitals:"))
     k = int(input("enter the number of electrons"))
     c = comb(n,k)
@@ -71,13 +75,15 @@ def hr():
     ba = bi.binary_hash(bi.per(n,k))
     run2 = int(input("Static field response(Yes:1/No:0)"))
     if run2:
-        global x_f,y_f
-        x_f = float(input("enter the x component of the field"))
-        y_f = float(input("enter the y component of the field"))
-        incords()
+        run3 = int(input("Finite difference or SOS(0/1):"))
+        if run3 == 0:
+            global x_f,y_f
+            x_f = float(input("enter the x component of the field"))
+            y_f = float(input("enter the y component of the field"))
+            incords()
 
 def ehr():
-    global n,k,c,m,b,u,ba,per,r,cords,run2
+    global n,k,c,m,b,u,ba,per,r,cords,run2,run3
     n = int(input("enter the number of spin orbitals:"))
     k = int(input("enter the number of electrons"))
     c = comb(n,k)
@@ -87,9 +93,11 @@ def ehr():
     per = int(input("is the system linear open chain or closed monocyclic(0/1)"))
     run2 = int(input("Static field response(Yes:1/No:0)"))
     if run2:
-        global x_f,y_f
-        x_f = float(input("enter the x component of the field"))
-        y_f = float(input("enter the y component of the field"))
+        run3 = int(input("Finite difference or SOS(0/1):"))
+        if run3 == 0:
+            global x_f,y_f
+            x_f = float(input("enter the x component of the field"))
+            y_f = float(input("enter the y component of the field"))
     incords()
     r = np.zeros((m,m))
     for i in range(m):
@@ -98,7 +106,7 @@ def ehr():
     ba = bi.binary_hash(bi.per(n,k))
     
 def p():
-    global n,k,c,m,b,u,r,ba,per,cords,run2
+    global n,k,c,b,m,u,r,ba,per,cords,run2,run3
     n = int(input("enter the number of spin orbitals: "))
     k = int(input("enter the number of electrons: "))
     c = comb(n,k)
@@ -109,9 +117,10 @@ def p():
     run2 = int(input("Static field response(Yes:1/No:0)"))
     if run2:
         run3 = int(input("Finite difference or SOS(0/1):"))
-        global x_f,y_f
-        x_f = float(input("enter the x component of the field"))
-        y_f = float(input("enter the y component of the field"))
+        if run3 == 0:
+            global x_f,y_f
+            x_f = float(input("enter the x component of the field"))
+            y_f = float(input("enter the y component of the field"))
     incords()
     r = np.zeros((m,m))
     for i in range(m):
