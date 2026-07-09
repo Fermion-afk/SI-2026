@@ -1,23 +1,22 @@
+import Interface.session as ss
 import numpy as np
-import config as con
 import Hamiltonians.hubbard as hb
 import Basis_operations.binary as bi
-import Basis_operations.operators as op
+
+a = ss.ses["sys"]["a"]
+b = ss.ses["sys"]["b"]
+c = ss.ses["sys"]["c"]
+bas  = ss.ses["bas"]["bas"]
 
 def main_huckel():
-    bas = con.ba
-    dim = con.c
-    mat = np.zeros((dim, dim))
-    for i in range(dim):
-        for j in range(dim):
+    mat = np.zeros((c,c))
+    for i in range(c):
+        for j in range(c):
             hop = hb.hopp(bas[j])
             if i == j:
-                if con.run2:
-                    mat[i][j] = bi.nu(i,bas[i]) + op.fi_re(con.x_f,con.y_f,bas[j])
-                else:
-                    mat[i][j] = bi.nu(i,bas[i])
+                mat[i][j] = bi.nu(i,bas[i])*a
             else:
                 if hop is not None:
-                    mat[i][j] = hb.dp(bas[i], hop)*con.b             
+                    mat[i][j] = hb.dp(bas[i], hop)*b             
     return mat
 

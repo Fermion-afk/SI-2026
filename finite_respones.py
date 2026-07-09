@@ -61,12 +61,11 @@ def run(va,ve):
     N_nd = ve_nd.shape[1]
     N_d  = ve_d.shape[1]
 
-    # precompute transition dipole matrices — shape (2, N_nd, N_d)
-    M_gd = np.zeros((2, N_nd, N_d))
+    # precompute transition dipole — ground state only, shape (2, N_nd)
+    M_gd = np.zeros((2, N_nd))
     for a in range(2):
         for n in range(N_nd):
-            for i in range(N_d):
-                M_gd[a,n,i] = t_dm(tuple(ve_nd[:,n]), tuple(ve_d[:,i]), a)
+            M_gd[a,n] = t_dm(tuple(ve_nd[:,n]), tuple(ve_d[:,0]), a)
 
     # precompute excited-excited transition dipole — shape (2, N_nd, N_nd)
     M_nd = np.zeros((2, N_nd, N_nd))
@@ -75,46 +74,38 @@ def run(va,ve):
             for n in range(N_nd):
                 M_nd[a,m,n] = t_dm(tuple(ve_nd[:,m]), tuple(ve_nd[:,n]), a)
 
-    # precompute ground-ground diagonal — shape (2, N_d)
-    M_dd = np.zeros((2, N_d))
+    # precompute ground-ground diagonal — scalar per component, shape (2,)
+    M_dd = np.zeros(2)
     for a in range(2):
-        for i in range(N_d):
-            M_dd[a,i] = t_dm(tuple(ve_d[:,i]), tuple(ve_d[:,i]), a)
+        M_dd[a] = t_dm(tuple(ve_d[:,0]), tuple(ve_d[:,0]), a)
 
-    def sus(M_gd, M_nd, M_dd,va_d,va_nd):
-        def alpha(a, b, i=0):
-            k = 0
-            for n in range(N_nd):
-                k += M_gd[a,n,i] * M_gd[b,n,i] / (va_nd[n] - va_d[i])
-            return k
-        def beta(a, b, c, i=0):
-            k = 0
-            for m in range(N_nd):
-                for n in range(N_nd):
-                    dm_E = (va_nd[m]-va_d[i]) * (va_nd[n]-va_d[i])
-                    k += M_gd[a,m,i] * M_nd[b,m,n] * M_gd[c,n,i] / dm_E
-            mu_00 = M_dd[a,i]
-            for n in range(N_nd):
-                dE_n = (va_nd[n]-va_d[i])**2
-                k -= mu_00 * M_gd[b,n,i] * M_gd[c,n,i] / dE_n
-            return k
-        def gamma(a, b, c, d, i=0):
-            k = 0
-            for l in range(N_nd):
-                for m in range(N_nd):
-                    for n in range(N_nd):
-                        dl = va_nd[l]-va_d[i]
-                        dm = va_nd[m]-va_d[i]
-                        dn = va_nd[n]-va_d[i]
-                        k += (M_gd[a,l,i] * M_nd[b,l,m] *
-                            M_nd[c,m,n] * M_gd[d,n,i]) / (dl*dm*dn)
-            for m in range(N_nd):
-                for n in range(N_nd):
-                    dm2 = (va_nd[m]-va_d[i])**2
-                    dn  =  va_nd[n]-va_d[i]
-                    k -= (M_gd[a,m,i] * M_dd[b,i] *
-                        M_gd[c,n,i] * M_gd[d,n,i]) / (dm2*dn)
-            return k
+    def sus(M_gd, M_nd, M_dd, va_d, va_nd):
+
+        
+
+        # precompute energy differences — shape (N_nd,)
+        dE = va_nd - va_d[0]
+
+        def alpha(a, b):
+            return np.sum(M_gd[a] * M_gd[b] / dE)
+
+        def beta(a, b, c):
+            # term 1: M_gd[a,m] * M_nd[b,m,n] * M_gd[c,n] / (dE[m]*dE[n])
+            # weight M_nd by outer product of 1/dE
+            w = np.outer(1/dE, 1/dE)           # shape (N_nd, N_nd)
+            t1 = np.einsum('m,mn,n,mn->', M_gd[a], M_nd[b], M_gd[c], w)
+            # term 2: mu_00 * M_gd[b,n] * M_gd[c,n] / dE[n]^2
+            t2 = M_dd[b] * np.sum(M_gd[b] * M_gd[c] / dE**2)
+            return t1 - t2
+
+        def gamma(a, b, c, d):
+            w3 = np.einsum('l,m,n->lmn', 1/dE, 1/dE, 1/dE)  # shape (N_nd,N_nd,N_nd)
+            # term 1: M_gd[a,l]*M_nd[b,l,m]*M_nd[c,m,n]*M_gd[d,n] / (dE[l]*dE[m]*dE[n])
+            t1 = np.einsum('l,lm,mn,n,lmn->', M_gd[a], M_nd[b], M_nd[c], M_gd[d], w3)
+            # term 2: M_gd[a,m]*M_dd[b]*M_gd[c,n]*M_gd[d,n] / (dE[m]^2 * dE[n])
+            w2 = np.outer(1/dE**2, 1/dE)       # shape (N_nd, N_nd)
+            t2 = M_dd[b] * np.einsum('m,n,n,mn->', M_gd[a], M_gd[c], M_gd[d], w2)
+            return t1 - t2
         def susceptibilty():
             print("ALPHA")
             print(f"alphaxx = {2*alpha(0,0)}")

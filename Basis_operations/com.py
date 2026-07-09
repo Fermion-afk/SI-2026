@@ -67,9 +67,7 @@ def c(y,l): #this is the creation operator
         return h,l
 
 def ca(y,x,l):
-    
     g,l1 = a(x,l)
     h,l2 = c(y,l1)
-
     return (g+h)%2,l2
 

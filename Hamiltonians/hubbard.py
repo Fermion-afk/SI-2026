@@ -1,20 +1,28 @@
 import Basis_operations.binary as bi
 import numpy as np
-import config as con
-import Basis_operations.operators as op
+import Interface.session as ss
+
+n = ss.ses["sys"]["n"]
+k = ss.ses["sys"]["k"]
+c = ss.ses["sys"]["c"]
+m = n//2
+per = ss.ses["sys"]["per"]
+ba = ss.ses["bas"]["bas"]
+u = ss.ses["par"]["u"]
+b = ss.ses["par"]["b"]
 
 def hopp(l): #this gives the action of hopping term on bitstring of l
     def even(l):  #here m denotes the number of orbitals/2
         ce = []
-        for i in range((con.m)-1):
+        for i in range((m)-1):
             x,y = bi.ca(2*i,2*i+2,l)
             if y != None:
                 ce.append([x,y])     
             x1,y1 = bi.ca(2*i+2,2*i,l)
             if y1 != None:
                 ce.append([x1,y1])   
-        if con.per:
-            l_u = 2*(con.m - 1)
+        if per:
+            l_u = 2*(m - 1)
             f_u = 0
             x, y = bi.ca(f_u,l_u, l)
             if y is not None:
@@ -27,15 +35,15 @@ def hopp(l): #this gives the action of hopping term on bitstring of l
         return ce
     def odd(l): #here m denotes the number of orbitals/2
         co = []
-        for i in range(con.m-1):
+        for i in range(m-1):
             x,y = bi.ca(2*i+1,2*i+3,l)
             if y != None:
                 co.append([x,y])     
             x1,y1 = bi.ca(2*i+3,2*i+1,l)
             if y1 != None:
                 co.append([x1,y1])   
-        if con.per:
-            last_dn = 2*(con.m - 1) + 1
+        if per:
+            last_dn = 2*(m - 1) + 1
             first_dn = 1
             x, y = bi.ca(first_dn, last_dn, l)
             if y is not None:
@@ -58,7 +66,7 @@ def hopp(l): #this gives the action of hopping term on bitstring of l
 
 def hub(l): # this gives the action of hubbard term on bitstring of l 
     k2 = 0
-    for i in range(con.m):
+    for i in range(m):
         k1 = bi.nus(2*i,l)
         if k1 == 2:
             k2 += 1
@@ -71,19 +79,16 @@ def dp(l1,l2):
     return 0
 
 def main_hub():
-    bas = con.ba
-    mat1 = np.zeros((con.c,con.c))
-    for i in range(con.c):
-        for j in range(con.c):
+    bas = ba
+    mat1 = np.zeros((c,c))
+    for i in range(c):
+        for j in range(c):
             hop = hopp(bas[j])
             if i == j:
-                if con.run2:
-                    mat1[i][j] = hub(bas[j])*con.u + op.fi_re(con.x_f,con.y_f,bas[j]) #stark effect
-                else:
-                    mat1[i][j] = hub(bas[j])*con.u  # diagonal
+                    mat1[i][j] = hub(bas[j])*u  # diagonal
             else:
                 if hop is not None:
-                    mat1[i][j] = dp(bas[i], hop)*con.b  # off-diagonal
+                    mat1[i][j] = dp(bas[i], hop)*b  # off-diagonal
 
     return mat1
 
