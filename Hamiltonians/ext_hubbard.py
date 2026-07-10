@@ -19,8 +19,14 @@ def ext(l):
         pairs.append((m-1, 0))
     for i,j in pairs:
         rij = r[i][j]
-        ohno = math.sqrt(1 + (u*rij/14.397)**2)
-        k1 += (u/ohno)*(bi.nus(2*i,l)-1)*(bi.nus(2*j,l)-1)
+        k = ss.ses["par"]["v"]
+        if k == "Ohno":
+            i_s = math.sqrt(1 + (u*rij/14.397)**2)
+        elif k == "MN":
+            i_s = 1 + (u*rij/14.397)
+        else:
+            raise ValueError 
+        k1 += (u/i_s)*(bi.nus(2*i,l)-1)*(bi.nus(2*j,l)-1)
     return k1
 
 def main_ext():

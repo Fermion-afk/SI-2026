@@ -12,18 +12,13 @@ def dia(mat):
         x = input("complete spectrum(0) or lowest k eigenvalues(1)")
         if x == "1":
             import config as con
-            from scipy.sparse.linalg import eigsh
-            k = int(input(f"enter the value of k < {con.m}"))
+            
+            
             def scispa(mat,k):
-                evals,evecs = eigsh(mat,k,which = "SA")
+                
                 return evals,evecs
             return scispa(mat,k)
-        elif x == "0":
-            from numpy import linalg
-            def numdense(mat):
-                evals,evecs = linalg.eigh(mat)
-                return evals,evecs
-            return numdense(mat)
+        
         else:
             raise ValueError("Please enter either 0 or 1.")
     else: 

@@ -1,19 +1,27 @@
-import session as ss
-import model_system as ms
-import par_hamiltonian as ph
-import ob_fr as of
+import os
+import sys
 
+ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if ROOT_DIR not in sys.path:
+    sys.path.append(ROOT_DIR)
+
+def clear():
+    os.system("cls" if os.name == "nt" else "clear")    
+
+import Interface.session as ss
 ss.init()
-global model_ch
-model_ch = 0
+import Interface.model_system as ms
+import Interface.par_hamiltonian as ph
+import Interface.ob_fr as of
 
 def home():
+    clear()
     print(f"Model                 : {ss.ses['mod']['name']}")
     print(f"System                : {ss.ses['sys']['status']}")
     print(f"Parameters            : {ss.ses['par']['status']}")
     print(f"Basis                 : {ss.ses['bas']['status']}")
     print(f"Hamiltonian           : {ss.ses['ham']['status']}")
-    print(f"eigenpairs            : {ss.ses["ep"]["status"]} ")
+    print(f"eigenpairs            : {ss.ses['ep']['status']} ")
     print()
     print("-"*63)
     print()

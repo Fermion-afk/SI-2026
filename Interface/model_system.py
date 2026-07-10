@@ -1,25 +1,28 @@
-import session as ss
+import Interface.session as ss
 import numpy as np
 from math import comb
+import os
 
-m = ss.ses["sys"]["n"]//2
-cords = ss.ses["sys"]["coords"]
+def clear():
+    os.system("cls" if os.name == "nt" else "clear")
 
 def incords():
     cords = []
-    for i in range(ss.ses["sys"]["n"]//2):
+    for i in range(ss.ses["sys"]["n"] // 2):
         xy = input(f"enter x y coords for site {i} in Angstroms: ").split()
         cords.append([float(xy[0]), float(xy[1])])
-    cords = np.array(cords)
+    return np.array(cords)
 
-def dis_mat():
-    r = np.zeros((m,m))
+def dis_mat(coords):
+    m = len(coords)
+    r = np.zeros((m, m))
     for i in range(m):
         for j in range(m):
-            r[i][j] = np.linalg.norm(cords[i]-cords[j])
-    ss.ses["sys"]["dis_mat"] = r
+            r[i][j] = np.linalg.norm(coords[i] - coords[j])
+    return r
 
 def model():
+    clear()
     print("="*63)
     print("                         Model")
     print("="*63)
@@ -49,80 +52,81 @@ def model():
     ss.par_ready()
 
 def sys():
-
-    print("="*63)
-    print("                         System")
-    print("="*63)
-    print()
-    print("Current Configuration")
-    print()
-    print(f"Spin Orbitals        : {ss.ses['sys']['n']}")
-    print(f"Electrons            : {ss.ses['sys']['k']}")
-    print(f"Boundary Condition   : {ss.ses['sys']['per']}")
-
-    if ss.ses["sys"]["coords"] == None:
-        print("Coordinates          : Not Loaded")
-    else:
-        print("Coordinates          : Loaded")
-
-    print()
-    print("-"*63)
-    print()
-
-    print("1. Spin Orbitals")
-    print("2. Electrons")
-    print("3. Boundary Condition")
-    print("4. Coordinates")
-    print("5. Back")
-    print()
-
-    ch = int(input("Choice : "))
-
-    if ch == 1:
-        ss.ses["sys"]["n"] = int(input("Number of Spin Orbitals : "))
-        ss.sys_ready()
-        ss.invalidate_bas()
-        ss.invalidate_ham()
-
-    elif ch == 2:
-        ss.ses["sys"]["k"] = int(input("Number of Electrons : "))
-        ss.sys_ready()
-        ss.invalidate_bas()
-        ss.invalidate_ham()
-
-    elif ch == 3:
+    while True:    
+        clear()
+        print("="*63)
+        print("                         System")
+        print("="*63)
         print()
-        print("1. Open Chain")
-        print("2. Closed Ring")
-        print("3. Neither")
+        print("Current Configuration")
         print()
-        per = int(input("Choice : "))
-        if per == 1:
-            ss.ses["sys"]["per"] = "Open Chain"
-        elif per == 2:
-            ss.ses["sys"]["per"] = "Closed Ring"
-        elif per == 3:
-            ss.ses["sys"]["per"] = "Neither"
+        print(f"Spin Orbitals        : {ss.ses['sys']['n']}")
+        print(f"Electrons            : {ss.ses['sys']['k']}")
+        print(f"Boundary Condition   : {ss.ses['sys']['per']}")
+
+        if ss.ses["sys"]["coords"] is None:
+            print("Coordinates          : Not Loaded")
+        else:
+            print("Coordinates          : Loaded")
+
+        print()
+        print("-"*63)
+        print()
+
+        print("1. Spin Orbitals")
+        print("2. Electrons")
+        print("3. Boundary Condition")
+        print("4. Coordinates")
+        print("5. Back")
+        print()
+
+        ch = int(input("Choice : "))
+
+        if ch == 1:
+            ss.ses["sys"]["n"] = int(input("Number of Spin Orbitals : "))
+            ss.sys_ready()
+            ss.invalidate_bas()
+            ss.invalidate_ham()
+
+        elif ch == 2:
+            ss.ses["sys"]["k"] = int(input("Number of Electrons : "))
+            ss.sys_ready()
+            ss.invalidate_bas()
+            ss.invalidate_ham()
+
+        elif ch == 3:
+            print()
+            print("1. Open Chain")
+            print("2. Closed Ring")
+            print("3. Neither")
+            print()
+            per = int(input("Choice : "))
+            if per == 1:
+                ss.ses["sys"]["per"] = "Open Chain"
+            elif per == 2:
+                ss.ses["sys"]["per"] = "Closed Ring"
+            elif per == 3:
+                ss.ses["sys"]["per"] = "Neither"
+            else:
+                print("Invalid Choice")
+                input("Press Enter...")
+                return
+            n = ss.ses["sys"]["n"]
+            k = ss.ses["sys"]["k"]
+            if n != None and k != None:
+                ss.ses["sys"]["c"] = comb(n,k)
+            ss.sys_ready()
+            ss.invalidate_ham()
+
+        elif ch == 4:
+            coords = incords()
+            ss.ses["sys"]["coords"] = coords
+            ss.ses["sys"]["dis_mat"] = dis_mat(coords)
+
+        elif ch == 5:
+            return
+
         else:
             print("Invalid Choice")
             input("Press Enter...")
             return
-        n = ss.ses["sys"]["n"]
-        k = ss.ses["sys"]["k"]
-        if n != None and k != None:
-            ss.ses["sys"]["c"] = comb(n,k)
-        ss.sys_ready()
-        ss.invalidate_ham()
-
-    elif ch == 4:
-        ss.ses["sys"]["coords"] = incords()
-        cords = ss.ses["sys"]["coords"]
-        ss.ses["sys"]["dis_mat"] = dis_mat()
-
-    elif ch == 5:
-        return
-
-    else:
-        print("Invalid Choice")
-        input("Press Enter...")
-        return

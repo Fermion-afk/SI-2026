@@ -1,8 +1,15 @@
-import session as ss
-import Basis_operations.operators as op
+import os
+import sys
 
-evals = ss.ses["ep"]["evals"]
-evecs = ss.ses["ep"]["evecs"]
+def clear():
+    os.system("cls" if os.name == "nt" else "clear")
+
+ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if ROOT_DIR not in sys.path:
+    sys.path.append(ROOT_DIR)
+
+import Interface.session as ss
+import Basis_operations.operators as op
 
 def state_choice():
     print()
@@ -28,10 +35,14 @@ def select_sus():
     return int(input("Choice : "))
 
 def observables():
+    clear()
     if ss.ses["ep"]["evecs"] == None:
         print("Diagonalize Hamiltonian First")
         return
     
+    evals = ss.ses["ep"]["evals"]
+    evecs = ss.ses["ep"]["evecs"]
+
     print("="*63)
     print("                     Observables")
     print("="*63)
@@ -77,8 +88,7 @@ def observables():
         return
     
 def sos():
-
-    if ss.ses["ham"]["evecs"] == None:
+    if ss.ses["ep"]["evecs"] == None:
         print("Diagonalize Hamiltonian First")
         return
     ch = select_sus()
@@ -109,7 +119,6 @@ def sos():
         return
 
 def finite_difference():
-
     if ss.ses["bas"]["status"] != "Created":
         print("Construct Basis First")
         return
@@ -141,26 +150,27 @@ def finite_difference():
         return
 
 def finite_field():
+    while True:
+        clear()
+        print("="*63)
+        print("                Finite Field Response")
+        print("="*63)
+        print()
+        print("1. Sum Over States")
+        print("2. Finite Difference")
+        print("3. Back")
+        print()
+        ch = int(input("Choice : "))
 
-    print("="*63)
-    print("                Finite Field Response")
-    print("="*63)
-    print()
-    print("1. Sum Over States")
-    print("2. Finite Difference")
-    print("3. Back")
-    print()
-    ch = int(input("Choice : "))
+        if ch == 1:
+            sos()
 
-    if ch == 1:
-        sos()
+        elif ch == 2:
+            finite_difference()
 
-    elif ch == 2:
-        finite_difference()
+        elif ch == 3:
+            return
 
-    elif ch == 3:
-        return
-
-    else:
-        print("Invalid Choice")
-        return
+        else:
+            print("Invalid Choice")
+            return

@@ -1,6 +1,7 @@
 import subprocess
 import sys
 import re
+import time
 from openpyxl import Workbook
 
 # ===================== USER INPUTS =====================
@@ -9,8 +10,8 @@ RUN_TARGET = "main_1.py"      # <-- your main driver
 
 MODEL = "p"                   # hu / hr / ehr / p
 
-N_SPIN_ORBITALS = 10
-N_ELECTRONS = 5
+N_SPIN_ORBITALS = 12
+N_ELECTRONS = 6
 PERIODIC = 1                  # 0=open, 1=cyclic
 
 T_HOPPING = -2
@@ -19,20 +20,21 @@ U_ONSITE = 5
 FIELD_X = 1.0
 FIELD_Y = 0.0
 
-N_EXCITED = 250                # SOS cutoff
+N_EXCITED = 750                # SOS cutoff
 
 PRINT_EIGS = 0
 DOUBLE_OCC = 0
 DIPOLE = 0
 
-OUTPUT_XLSX = "SOS_cyclopent.xlsx"
+OUTPUT_XLSX = "benzene1_new.xlsx"
 
 SITE_COORDS = [
-    ( 0.0000,  1.4000),   # C1
-    (-1.3315,  0.4326),   # C2
-    (-0.8230, -1.1326),   # C3
-    ( 0.8230, -1.1326),   # C4
-    ( 1.3315,  0.4326),   # C5
+    ( 0.0000,  1.3970),   # C1
+    (-1.2098,  0.6985),   # C2
+    (-1.2098, -0.6985),   # C3
+    ( 0.0000, -1.3970),   # C4
+    ( 1.2098, -0.6985),   # C5
+    ( 1.2098,  0.6985),   # C6
 ]
 
 # =======================================================
@@ -86,6 +88,7 @@ def grab(name, text):
 
 
 def main():
+    start_time = time.perf_counter()
     out, err = run_job()
 
     print(out)
@@ -155,8 +158,9 @@ def main():
         ws.append([k,v,None if v is None else v*GAMMA_FACTOR])
 
     wb.save(OUTPUT_XLSX)
+    elapsed = time.perf_counter() - start_time
     print(f"Saved {OUTPUT_XLSX}")
-
+    print(f"Execution time: {elapsed:.2f} seconds")
 
 if __name__ == "__main__":
     main()

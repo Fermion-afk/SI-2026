@@ -44,23 +44,24 @@ def bas_ready():
     ses["bas"]["status"] = "Created"
 
 def invalidate_ham():
-
-    ses["ham"]["mat"] = None
-    ses["ham"]["status"] = "Outdated"
-    ses["ham"]["diag"] = None
+    if ses["ham"]["status"] == "Not Created":
+        ses["ham"]["mat"] = None
+        ses["ham"]["evals"] = None
+        ses["ham"]["evecs"] = None
+        ses["ham"]["status"] = "Outdated"
+        ses["ham"]["diag"] = None
 
 def ham_ready():
     ses["ham"]["status"] = "Ready"
 
 def sys_ready():
 
-    if (ses["sys"]["n"] != None and
-        ses["sys"]["k"] != None and
-        ses["sys"]["per"] != None):
-
+    if (ses["sys"]["n"] is not None and
+        ses["sys"]["k"] is not None and
+        ses["sys"]["per"] is not None):
         ses["sys"]["status"] = "Configured"
 
-def par_ready():
+def par_ready():    
     mod = ses["mod"]["name"]
     if mod == "Huckel":
         if (ses["par"]["a"] != None and
@@ -94,8 +95,8 @@ def par_ready():
             ses["par"]["status"] = "Incomplete"
 
 def ep_ready():
-    if (ses["ep"]["evals"] != None and 
-        ses["ep"]["evecs"] != None):
+    if (ses["ep"]["evals"] is not None and 
+        ses["ep"]["evecs"] is not None):
 
         ses["ep"]["status"] = "Ready"
 

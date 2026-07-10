@@ -26,14 +26,6 @@ s = 0
 global va,ve
 va = []
 ve = []
-
-def incords():
-    global cords
-    cords = []
-    for i in range(m):
-        xy = input(f"enter x y coords for site {i} in Angstroms: ").split()
-        cords.append([float(xy[0]), float(xy[1])])
-    cords = np.array(cords)
     
 def hu():
     global s
@@ -98,11 +90,6 @@ def ehr():
             global x_f,y_f
             x_f = float(input("enter the x component of the field"))
             y_f = float(input("enter the y component of the field"))
-    incords()
-    r = np.zeros((m,m))
-    for i in range(m):
-        for j in range(m):
-            r[i][j] = np.linalg.norm(cords[i]-cords[j])
     ba = bi.binary_hash(bi.per(n,k))
     
 def p():

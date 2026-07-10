@@ -2,7 +2,10 @@ import math
 import cmath
 import numpy as np
 from . import visualization as vis
-import config as con
+import Interface.session as ss
+
+n = ss.ses["sys"]["n"]
+m = n//2
 
 def fun(N,x):
   if x == "0":
@@ -45,10 +48,9 @@ def fun_n(m):
     return eval,evec
 
 def hu_main():
-    x = con.m
     y = con.x_huc
     if y == "0" or y == "1":    
-        eval,evec = fun(x,y)
+        eval,evec = fun(m,y)
         b = input("visualize the orbitals(y/n):").strip().lower()
         if not(b=="y") and not(b=="n"):
             print("invalid input,enter either(y/n):")
@@ -61,7 +63,6 @@ def hu_main():
             print(eval)
             print(evec)
     elif y == "2":
-        n = con.m
         print("input the adjacency matrix")
         m = [] 
         for i in range(n): 
