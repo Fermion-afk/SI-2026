@@ -55,7 +55,6 @@ def ham_ready():
     ses["ham"]["status"] = "Ready"
 
 def sys_ready():
-
     if (ses["sys"]["n"] is not None and
         ses["sys"]["k"] is not None and
         ses["sys"]["per"] is not None):

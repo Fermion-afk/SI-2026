@@ -36,7 +36,7 @@ def select_sus():
 
 def observables():
     clear()
-    if ss.ses["ep"]["evecs"] == None:
+    if ss.ses["ep"]["evecs"] is None:
         print("Diagonalize Hamiltonian First")
         return
     
@@ -88,7 +88,7 @@ def observables():
         return
     
 def sos():
-    if ss.ses["ep"]["evecs"] == None:
+    if ss.ses["ep"]["evecs"] is None:
         print("Diagonalize Hamiltonian First")
         return
     ch = select_sus()

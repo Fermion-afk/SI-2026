@@ -139,10 +139,11 @@ def hamiltonian():
         elif ch == 5:
             if ss.ses["ep"]["status"] != "Ready":
                 print("Diagonalize the Hamiltonian first")
-            evals = ss.ses["ep"]["evals"]
-            k = int(input(f"Enter K for printing the lowest k eigenpairs(max:{len(evals)})"))
-            print(evals[:k])
-            print(ss.ses["ep"]["evecs"][:,:k])
+            else:
+                evals = ss.ses["ep"]["evals"]
+                k = int(input(f"Enter K for printing the lowest k eigenpairs(max:{len(evals)})"))
+                print(evals[:k])
+                print(ss.ses["ep"]["evecs"][:,:k])
 
         elif ch == 6:
             return
