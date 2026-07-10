@@ -2,16 +2,17 @@ import Basis_operations.binary as bi
 import numpy as np
 import Interface.session as ss
 
-n = ss.ses["sys"]["n"]
-k = ss.ses["sys"]["k"]
-c = ss.ses["sys"]["c"]
-m = n//2
-per = ss.ses["sys"]["per"]
-ba = ss.ses["bas"]["bas"]
-u = ss.ses["par"]["u"]
-b = ss.ses["par"]["b"]
+def state_data():
+    c = ss.ses["sys"]["c"]
+    m = ss.ses["sys"]["n"]//2
+    per = ss.ses["sys"]["per"]
+    ba = ss.ses["bas"]["bas"]
+    u = ss.ses["par"]["u"]
+    b = ss.ses["par"]["b"]
+    return c,m,per,ba,u,b
 
 def hopp(l): #this gives the action of hopping term on bitstring of l
+    _,m,per,_,_,_ = state_data()
     def even(l):  #here m denotes the number of orbitals/2
         ce = []
         for i in range((m)-1):
@@ -65,6 +66,7 @@ def hopp(l): #this gives the action of hopping term on bitstring of l
     return o + e
 
 def hub(l): # this gives the action of hubbard term on bitstring of l 
+    _,m,_,_,_,_ = state_data()
     k2 = 0
     for i in range(m):
         k1 = bi.nus(2*i,l)
@@ -79,6 +81,7 @@ def dp(l1,l2):
     return 0
 
 def main_hub():
+    c,_,_,ba,u,b = state_data()
     bas = ba
     mat1 = np.zeros((c,c))
     for i in range(c):

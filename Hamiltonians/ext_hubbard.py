@@ -4,15 +4,18 @@ import Basis_operations.binary as bi
 import numpy as np
 from . import hubbard as hub
 
-u = ss.ses["par"]["u"]
-b = ss.ses["par"]["b"]
-m = ss.ses["sys"]["n"]//2
-per = ss.ses["sys"]["per"]
-c = ss.ses["sys"]["c"]
-bas = ss.ses["bas"]["bas"]
-r = ss.ses["sys"]["dis_mat"]
+def state_data():
+    u = ss.ses["par"]["u"]
+    b = ss.ses["par"]["b"]
+    m = ss.ses["sys"]["n"]//2
+    per = ss.ses["sys"]["per"]
+    c = ss.ses["sys"]["c"]
+    bas = ss.ses["bas"]["bas"]
+    r = ss.ses["sys"]["dis_mat"]
+    return u,b,m,per,c,bas,r
 
 def ext(l):
+    u,_,m,per,_,_,r = state_data()
     k1 = 0
     pairs = [(i, i+1) for i in range(m-1)]
     if per:
@@ -30,6 +33,7 @@ def ext(l):
     return k1
 
 def main_ext():
+    u,b,_,_,c,bas,_ = state_data()
     mat1 = np.zeros((c,c))
     for i in range(c):
         for j in range(i,c):

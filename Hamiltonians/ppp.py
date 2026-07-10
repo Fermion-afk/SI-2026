@@ -4,14 +4,17 @@ import Basis_operations.binary as bi
 import numpy as np
 from . import hubbard as hub
 
-b = ss.ses["par"]["b"]
-u = ss.ses["par"]["u"]
-m = ss.ses["sys"]["n"]//2
-r = ss.ses["sys"]["dis_mat"]
-c = ss.ses["sys"]["c"]
-bas = ss.ses["bas"]["bas"]
+def state_data():
+    b = ss.ses["par"]["b"]
+    u = ss.ses["par"]["u"]
+    m = ss.ses["sys"]["n"]//2
+    r = ss.ses["sys"]["dis_mat"]
+    c = ss.ses["sys"]["c"]
+    bas = ss.ses["bas"]["bas"]
+    return b,u,m,r,c,bas
 
 def ext(l):
+    _,u,m,r,_,_ = state_data()
     k1 = 0
     for i in range(m-1):
         for j in range(i+1,m):
@@ -27,6 +30,7 @@ def ext(l):
     return k1
 
 def main_ppp():
+    b,u,_,_,c,bas = state_data()
     mat1 = np.zeros((c,c))
     for i in range(c):
         for j in range(i,c):

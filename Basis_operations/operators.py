@@ -2,13 +2,11 @@ import Interface.session as ss
 import Basis_operations.binary as bi
 import numpy as np
 
-
 def _state_data():
     ba = ss.ses["bas"]["bas"]
     m = ss.ses["sys"]["n"] // 2
     cords = ss.ses["sys"]["coords"]
     return ba, m, cords
-
 
 def expval(f, l): # calculates expectation value <l|f|l>
     k = 0
