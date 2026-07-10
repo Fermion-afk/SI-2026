@@ -1,6 +1,9 @@
 import Interface.session as ss
 import os
 
+def pause():
+    input("Press Enter to continue......")
+
 def clear():
     os.system("cls" if os.name == "nt" else "clear")
 
@@ -99,6 +102,7 @@ def hamiltonian():
                 print("Construct Hamiltonian First")
                 return
             print(ss.ses["ham"]["mat"])
+            pause()
             
         elif ch == 4:
             if ss.ses["ham"]["status"] != "Ready":
@@ -144,6 +148,7 @@ def hamiltonian():
                 k = int(input(f"Enter K for printing the lowest k eigenpairs(max:{len(evals)})"))
                 print(evals[:k])
                 print(ss.ses["ep"]["evecs"][:,:k])
+                pause()
 
         elif ch == 6:
             return

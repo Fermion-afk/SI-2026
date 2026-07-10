@@ -1,6 +1,9 @@
 import os
 import sys
 
+def pause():
+    input("Press Enter to continue.......")
+
 def clear():
     os.system("cls" if os.name == "nt" else "clear")
 
@@ -59,26 +62,32 @@ def observables():
         st = state_choice()
         if st == None:
             return
-        print(op.double_occ(evecs[:,st]))
+        print(op.expval(op.double_occ,evecs[:,st]))
+        pause()
     
     elif ch == 2:
         st = state_choice()
         if st == None:
             return
-        print(f"x component of dipole Moment:{evals[:,st]}")
-        print(f"y component of dipole Moment:{evals[:,st]}")
+        x = op.expval(op.dm_x,evecs[:,st])
+        y = op.expval(op.dm_y,evecs[:,st])
+        print(f"x component of dipole Moment:{x}")
+        print(f"y component of dipole Moment:{y}")
+        pause()
 
     elif ch == 3:
         st = state_choice()
         if st == None:
             return
         print(op.e_d(evecs[:,st]))
+        pause()
 
     elif ch == 4:
         st = state_choice()
         if st == None:
             return
         print(op.dd_corr(evecs[:,st]))
+        pause()
 
     elif ch == 5:
         return
@@ -98,18 +107,21 @@ def sos():
         if st == None:
             return
         # Call SOS Polarizability
+        pause()
 
     elif ch == 2:
         st = state_choice()
         if st == None:
             return
         # Call SOS First Hyperpolarizability
+        pause()
 
     elif ch == 3:
         st = state_choice()
         if st == None:
             return
         # Call SOS Second Hyperpolarizability
+        pause()
 
     elif ch == 4:
         return
@@ -129,18 +141,21 @@ def finite_difference():
         if st == None:
             return
         # Call Finite Difference Polarizability
+        pause()
 
     elif ch == 2:
         st = state_choice()
         if st == None:
             return
         # Call Finite Difference First Hyperpolarizability
+        pause()
 
     elif ch == 3:
         st = state_choice()
         if st == None:
             return
         # Call Finite Difference Second Hyperpolarizability
+        pause()
 
     elif ch == 4:
         return
