@@ -46,6 +46,7 @@ def parameters():
             return
         ss.par_ready()
         ss.invalidate_ham()
+        ss.invalidate_ep()
     
 def hamiltonian():
     while True: 

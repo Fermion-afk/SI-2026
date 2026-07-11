@@ -36,20 +36,27 @@ def home():
     return int(input("Choice : "))
 
 while True:
-    ch = home()
-    match ch:
-        case 1:
-            ms.model()
-        case 2:
-            ms.sys()
-        case 3:
-            ph.parameters()
-        case 4:
-            ph.hamiltonian()
-        case 5:
-            of.observables()
-        case 6:
-            of.finite_field()
-        case 7:
-            break   
+    try:
+        ch = home()
+        match ch:
+            case 1:
+                ms.model()
+            case 2:
+                ms.sys()
+            case 3:
+                ph.parameters()
+            case 4:
+                ph.hamiltonian()
+            case 5:
+                of.observables()
+            case 6:
+                of.finite_field()
+            case 7:
+                break   
+    except Exception as e:
+        print("\nAn unexpected Error Occurred")
+        print(type(e).__name__)
+        print(e)
+
+        input("\nPress Enter to continue")
 

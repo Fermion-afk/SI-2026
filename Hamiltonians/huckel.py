@@ -7,7 +7,7 @@ def state_data():
     n = ss.ses["sys"]["n"]
     a = ss.ses["par"]["a"]
     b = ss.ses["par"]["b"]
-    c = ss.ses["par"]["c"]
+    c = ss.ses["sys"]["c"]
     bas  = ss.ses["bas"]["bas"]
     return n,a,b,c,bas
 

@@ -5,6 +5,7 @@ import numpy as np
 from . import hubbard as hub
 
 def state_data():
+    a = ss.ses["par"]["a"]
     u = ss.ses["par"]["u"]
     b = ss.ses["par"]["b"]
     m = ss.ses["sys"]["n"]//2
@@ -12,10 +13,10 @@ def state_data():
     c = ss.ses["sys"]["c"]
     bas = ss.ses["bas"]["bas"]
     r = ss.ses["sys"]["dis_mat"]
-    return u,b,m,per,c,bas,r
+    return a,u,b,m,per,c,bas,r
 
 def ext(l):
-    u,_,m,per,_,_,r = state_data()
+    _,u,_,m,per,_,_,r = state_data()
     k1 = 0
     pairs = [(i, i+1) for i in range(m-1)]
     if per:
@@ -33,12 +34,15 @@ def ext(l):
     return k1
 
 def main_ext():
-    u,b,_,_,c,bas,_ = state_data()
+    a,u,b,m,_,c,bas,_ = state_data()
     mat1 = np.zeros((c,c))
     for i in range(c):
         for j in range(i,c):
             if i == j:
-                mat1[i][j] = hub.hub(bas[j])*u + ext(bas[j])
+                o = 0
+                for k in range(2*m):
+                    o += bi.nu(k,bas[i])*a
+                mat1[i][j] = hub.hub(bas[j])*u + ext(bas[j]) + o
             else:
                 hop = hub.hopp(bas[j])
                 if hop is not None:

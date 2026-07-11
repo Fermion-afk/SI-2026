@@ -5,16 +5,17 @@ import numpy as np
 from . import hubbard as hub
 
 def state_data():
+    a = ss.ses["par"]["a"]
     b = ss.ses["par"]["b"]
     u = ss.ses["par"]["u"]
     m = ss.ses["sys"]["n"]//2
     r = ss.ses["sys"]["dis_mat"]
     c = ss.ses["sys"]["c"]
     bas = ss.ses["bas"]["bas"]
-    return b,u,m,r,c,bas
+    return a,b,u,m,r,c,bas
 
 def ext(l):
-    _,u,m,r,_,_ = state_data()
+    _,_,u,m,r,_,_ = state_data()
     k1 = 0
     for i in range(m-1):
         for j in range(i+1,m):
@@ -30,12 +31,15 @@ def ext(l):
     return k1
 
 def main_ppp():
-    b,u,_,_,c,bas = state_data()
+    a,b,u,m,_,c,bas = state_data()
     mat1 = np.zeros((c,c))
     for i in range(c):
         for j in range(i,c):
             if i == j:
-                mat1[i][j] = hub.hub(bas[j])*u + ext(bas[j])
+                o = 0
+                for k in range(2*m):
+                    o += bi.nu(k,bas[i])*a
+                mat1[i][j] = hub.hub(bas[j])*u + ext(bas[j]) + o
             else:
                 hop = hub.hopp(bas[j])
                 if hop is not None:

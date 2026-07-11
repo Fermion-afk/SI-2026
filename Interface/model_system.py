@@ -49,7 +49,7 @@ def model():
         input("Press Enter...")
         return
     ss.invalidate_ham()
-    ss.par_ready()
+    ss.invalidate_ep()
 
 def sys():
     while True:    
@@ -87,12 +87,14 @@ def sys():
             ss.sys_ready()
             ss.invalidate_bas()
             ss.invalidate_ham()
+            ss.invalidate_ep()
 
         elif ch == 2:
             ss.ses["sys"]["k"] = int(input("Number of Electrons : "))
             ss.sys_ready()
             ss.invalidate_bas()
             ss.invalidate_ham()
+            ss.invalidate_ep()
 
         elif ch == 3:
             print()
@@ -117,12 +119,16 @@ def sys():
                 ss.ses["sys"]["c"] = comb(n,k)
             ss.sys_ready()
             ss.invalidate_ham()
+            ss.invalidate_ep()
 
         elif ch == 4:
             coords = incords()
             ss.ses["sys"]["coords"] = coords
             ss.ses["sys"]["dis_mat"] = dis_mat(coords)
-
+            ss.sys_ready
+            ss.invalidate_ham()
+            ss.invalidate_ep()
+            
         elif ch == 5:
             return
 

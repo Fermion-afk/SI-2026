@@ -9,10 +9,11 @@ def state_data():
     ba = ss.ses["bas"]["bas"]
     u = ss.ses["par"]["u"]
     b = ss.ses["par"]["b"]
-    return c,m,per,ba,u,b
+    a = ss.ses["par"]["a"]
+    return c,m,per,ba,u,b,a
 
 def hopp(l): #this gives the action of hopping term on bitstring of l
-    _,m,per,_,_,_ = state_data()
+    _,m,per,_,_,_,_ = state_data()
     def even(l):  #here m denotes the number of orbitals/2
         ce = []
         for i in range((m)-1):
@@ -66,7 +67,7 @@ def hopp(l): #this gives the action of hopping term on bitstring of l
     return o + e
 
 def hub(l): # this gives the action of hubbard term on bitstring of l 
-    _,m,_,_,_,_ = state_data()
+    _,m,_,_,_,_,_ = state_data()
     k2 = 0
     for i in range(m):
         k1 = bi.nus(2*i,l)
@@ -81,14 +82,17 @@ def dp(l1,l2):
     return 0
 
 def main_hub():
-    c,_,_,ba,u,b = state_data()
+    c,m,_,ba,u,b,a = state_data()
     bas = ba
     mat1 = np.zeros((c,c))
     for i in range(c):
         for j in range(c):
             hop = hopp(bas[j])
             if i == j:
-                    mat1[i][j] = hub(bas[j])*u  # diagonal
+                    o = 0
+                    for k in range(2*m):
+                       o +=  bi.nu(k,bas[i])*a
+                    mat1[i][j] = hub(bas[j])*u + o # diagonal
             else:
                 if hop is not None:
                     mat1[i][j] = dp(bas[i], hop)*b  # off-diagonal

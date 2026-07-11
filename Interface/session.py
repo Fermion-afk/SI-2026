@@ -38,21 +38,20 @@ def init():
     }
 
 def invalidate_bas():
-    ses["bas"]["status"] = "outdated"
-
-def bas_ready():
-    ses["bas"]["status"] = "Created"
+    if ses["bas"]["bas"] is not "Not Created":
+        ses["bas"]["bas"] = None
+        ses["bas"]["status"] = "outdated"
 
 def invalidate_ham():
-    if ses["ham"]["status"] == "Not Created":
+    if ses["ham"]["status"] is not "Not Created":
         ses["ham"]["mat"] = None
-        ses["ham"]["evals"] = None
-        ses["ham"]["evecs"] = None
-        ses["ham"]["status"] = "Outdated"
-        ses["ham"]["diag"] = None
+        ses["ham"]["status"] = "Outdated"    
 
-def ham_ready():
-    ses["ham"]["status"] = "Ready"
+def invalidate_ep():
+    if ses["ep"]["status"] is not "Not created":
+        ses["ep"]["evals"] = None
+        ses["ep"]["evecs"] = None
+        ses["ep"]["status"] = "Outdated"        
 
 def sys_ready():
     if (ses["sys"]["n"] is not None and
@@ -93,13 +92,15 @@ def par_ready():
         else:
             ses["par"]["status"] = "Incomplete"
 
+def bas_ready():
+    if (ses["bas"]["bas"] is not None):
+        ses["bas"]["status"] = "Created"
+
+def ham_ready():
+    if (ses["ham"]["mat"] is not None):
+        ses["ham"]["status"] = "Ready"
+
 def ep_ready():
     if (ses["ep"]["evals"] is not None and 
         ses["ep"]["evecs"] is not None):
-
         ses["ep"]["status"] = "Ready"
-
-def invalidate_ep():
-    ses["ep"]["evals"] = None
-    ses["ep"]["evecs"] = None
-    ses["ep"]["status"] = "Outdated"

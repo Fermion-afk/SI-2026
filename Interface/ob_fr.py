@@ -13,6 +13,7 @@ if ROOT_DIR not in sys.path:
 
 import Interface.session as ss
 import Basis_operations.operators as op
+import numpy as np
 
 def state_choice():
     print()
@@ -131,30 +132,93 @@ def sos():
         return
 
 def finite_difference():
-    if ss.ses["bas"]["status"] != "Created":
-        print("Construct Basis First")
+    if ss.ses["ham"]["status"] != "Created":
+        print("Construct the Hamiltonian First")
         return
+    
     ch = select_sus()
 
+    def stark(x,y,i):
+        c = ss.ses["sys"]["c"]
+        bas = ss.ses["bas"]["bas"]
+        mat = ss.ses["ham"]["mat"].copy()
+        for i in range(c):
+            f = x*op.dm_x(bas[i]) + y*op.dm_y(bas[i])
+            mat[i,i] += f
+        val,vec = np.linalg.eigh(mat)
+        return val[i],vec[:,i]
+    
     if ch == 1:
         st = state_choice()
         if st == None:
             return
-        # Call Finite Difference Polarizability
+        h = 0.04
+
+        # x-component
+        e_p, _ = stark( h, 0, st)
+        e_0, _ = stark( 0, 0, st)
+        e_m, _ = stark(-h, 0, st)
+        alphax = -(e_p + e_m - 2*e_0)/(h*h)
+
+        # y-component
+        e_p, _ = stark(0,  h, st)
+        e_0, _ = stark(0,  0, st)
+        e_m, _ = stark(0, -h, st)
+        alphay = -(e_p + e_m - 2*e_0)/(h*h)
+        print(f"Longitudinal x component : {alphax}")
+        print(f"Longitudinal y component : {alphay}")
         pause()
 
     elif ch == 2:
         st = state_choice()
         if st == None:
             return
-        # Call Finite Difference First Hyperpolarizability
+
+        h = 0.04
+
+        # x-component
+        e_2p, _ = stark( 2*h, 0, st)
+        e_p , _ = stark( h , 0, st)
+        e_m , _ = stark(-h , 0, st)
+        e_2m, _ = stark(-2*h, 0, st)
+        betax = -(e_2p - 2*e_p + 2*e_m - e_2m)/(2*h**3)
+
+        # y-component
+        e_2p, _ = stark(0,  2*h, st)
+        e_p , _ = stark(0,   h , st)
+        e_m , _ = stark(0,  -h , st)
+        e_2m, _ = stark(0, -2*h, st)
+        betay = -(e_2p - 2*e_p + 2*e_m - e_2m)/(2*h**3)
+
+        print(f"Longitudinal x component : {betax}")
+        print(f"Longitudinal y component : {betay}")
         pause()
 
     elif ch == 3:
         st = state_choice()
         if st == None:
             return
-        # Call Finite Difference Second Hyperpolarizability
+
+        h = 0.04
+
+        # x-component
+        e_2p, _ = stark( 2*h, 0, st)
+        e_p , _ = stark( h , 0, st)
+        e_0 , _ = stark( 0 , 0, st)
+        e_m , _ = stark(-h , 0, st)
+        e_2m, _ = stark(-2*h, 0, st)
+        gammax = -(e_2p - 4*e_p + 6*e_0 - 4*e_m + e_2m)/(h**4)
+
+        # y-component
+        e_2p, _ = stark(0,  2*h, st)
+        e_p , _ = stark(0,   h , st)
+        e_0 , _ = stark(0,   0 , st)
+        e_m , _ = stark(0,  -h , st)
+        e_2m, _ = stark(0, -2*h, st)
+        gammay = -(e_2p - 4*e_p + 6*e_0 - 4*e_m + e_2m)/(h**4)
+
+        print(f"Longitudinal x component : {gammax}")
+        print(f"Longitudinal y component : {gammay}")
         pause()
 
     elif ch == 4:
