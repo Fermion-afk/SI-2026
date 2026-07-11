@@ -90,8 +90,11 @@ def main_hub():
             hop = hopp(bas[j])
             if i == j:
                     o = 0
-                    for k in range(2*m):
-                       o +=  bi.nu(k,bas[i])*a
+                    for k in range(m):
+                        if ss.ses["sys"]["uni"] == "Yes":
+                            o += bi.nus(2*k,bas[i])*a
+                        else:
+                            o += bi.nus(2*k,bas[i])*a[k]
                     mat1[i][j] = hub(bas[j])*u + o # diagonal
             else:
                 if hop is not None:

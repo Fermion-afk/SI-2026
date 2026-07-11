@@ -1,5 +1,6 @@
 import Interface.session as ss
 import os
+import numpy as np
 
 def pause():
     input("Press Enter to continue......")
@@ -16,7 +17,11 @@ def parameters():
         print()
         print("Current Parameters")
         print()
-        print(f"On-site Energy (a)        : {ss.ses['par']['a']}")
+        k = ss.ses["sys"]["uni"]
+        if k == "Yes":
+            print(f"On-site Energy (a)        : {ss.ses['par']['a']}")
+        else:
+            print(f"On-site Energy (a)        : Non-Uniform System") 
         print(f"Hopping Parameter (b)     : {ss.ses['par']['b']}")
         print(f"On-site Repulsion (u)     : {ss.ses['par']['u']}")
         print(f"Inter-site Repulsion(v)   : {ss.ses['par']['v']}")
@@ -32,7 +37,15 @@ def parameters():
 
         ch = int(input("Choice : "))
         if ch == 1:
-            ss.ses["par"]["a"] = float(input("On-site Energy(eV) : "))
+            k = ss.ses["sys"]["uni"]
+            if k == "Yes":
+                ss.ses["par"]["a"] = float(input("On-site Energy(eV) : "))
+            else:
+                m = ss.ses["sys"]["n"]//2
+                k = ss.ses["par"]["a"]
+                k = np.zeros((m,))
+                for i in range(m):
+                    ss.ses["par"]["a"][i] = float(input(f"Input the value of onsite energy for {i}th site:"))
         elif ch == 2:
             ss.ses["par"]["b"] = float(input("Hopping Parameter(eV) : "))
         elif ch == 3:

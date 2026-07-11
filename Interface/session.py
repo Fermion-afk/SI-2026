@@ -10,12 +10,14 @@ def init():
             "n"      : None,
             "k"      : None,
             "per"    : None,
+            "uni"    : None,   
             "c"      : None, 
             "coords" : None,
             "dis_mat" : None,
             "status" : "Not Configured"
         },
         "par" : {
+            "abar": None,
             "a"   : None,
             "b"   : None,
             "u"   : None,
@@ -38,7 +40,7 @@ def init():
     }
 
 def invalidate_bas():
-    if ses["bas"]["bas"] is not "Not Created":
+    if ses["bas"]["status"] is not "Not Created":
         ses["bas"]["bas"] = None
         ses["bas"]["status"] = "outdated"
 
@@ -97,8 +99,7 @@ def bas_ready():
         ses["bas"]["status"] = "Created"
 
 def ham_ready():
-    if (ses["ham"]["mat"] is not None):
-        ses["ham"]["status"] = "Ready"
+    ses["ham"]["status"] = "Ready"
 
 def ep_ready():
     if (ses["ep"]["evals"] is not None and 

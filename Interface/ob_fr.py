@@ -95,11 +95,13 @@ def observables():
 
     else:
         print("Invalid Choice")
+        pause()
         return
     
 def sos():
     if ss.ses["ep"]["evecs"] is None:
         print("Diagonalize Hamiltonian First")
+        pause()
         return
     ch = select_sus()
 
@@ -129,11 +131,13 @@ def sos():
 
     else:
         print("Invalid Choice")
+        pause()
         return
 
 def finite_difference():
-    if ss.ses["ham"]["status"] != "Created":
+    if ss.ses["ham"]["mat"] is None:
         print("Construct the Hamiltonian First")
+        pause()
         return
     
     ch = select_sus()
@@ -142,9 +146,9 @@ def finite_difference():
         c = ss.ses["sys"]["c"]
         bas = ss.ses["bas"]["bas"]
         mat = ss.ses["ham"]["mat"].copy()
-        for i in range(c):
-            f = x*op.dm_x(bas[i]) + y*op.dm_y(bas[i])
-            mat[i,i] += f
+        for j in range(c):
+            f = x*op.dm_x(bas[j]) + y*op.dm_y(bas[j])
+            mat[j,j] += f
         val,vec = np.linalg.eigh(mat)
         return val[i],vec[:,i]
     

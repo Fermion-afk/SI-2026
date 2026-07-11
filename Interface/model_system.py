@@ -63,6 +63,7 @@ def sys():
         print(f"Spin Orbitals        : {ss.ses['sys']['n']}")
         print(f"Electrons            : {ss.ses['sys']['k']}")
         print(f"Boundary Condition   : {ss.ses['sys']['per']}")
+        print(f"Uniform System       : {ss.ses["sys"]["uni"]}")
 
         if ss.ses["sys"]["coords"] is None:
             print("Coordinates          : Not Loaded")
@@ -76,8 +77,9 @@ def sys():
         print("1. Spin Orbitals")
         print("2. Electrons")
         print("3. Boundary Condition")
-        print("4. Coordinates")
-        print("5. Back")
+        print("4. Uniformity")
+        print("5. Coordinates")
+        print("6. Back")
         print()
 
         ch = int(input("Choice : "))
@@ -122,6 +124,22 @@ def sys():
             ss.invalidate_ep()
 
         elif ch == 4:
+            print()
+            print("Is the System Uniform or not?")
+            print()
+            print("1.Yes")
+            print("2.No")
+            per = int(input("Choice :"))
+            if per == 1:
+                ss.ses["sys"]["uni"] = "Yes"
+            elif per == 2:
+                ss.ses["sys"]["uni"] = "No"
+            else:
+                print("Invalid Choice")
+                input("Press Enter...")
+                return
+
+        elif ch == 5:
             coords = incords()
             ss.ses["sys"]["coords"] = coords
             ss.ses["sys"]["dis_mat"] = dis_mat(coords)
@@ -129,7 +147,7 @@ def sys():
             ss.invalidate_ham()
             ss.invalidate_ep()
             
-        elif ch == 5:
+        elif ch == 6:
             return
 
         else:

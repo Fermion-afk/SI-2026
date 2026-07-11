@@ -37,8 +37,11 @@ def main_ppp():
         for j in range(i,c):
             if i == j:
                 o = 0
-                for k in range(2*m):
-                    o += bi.nu(k,bas[i])*a
+                for k in range(m):
+                    if ss.ses["sys"]["uni"] == "Yes":
+                        o += bi.nus(2*k,bas[i])*a
+                    else:
+                        o += bi.nus(2*k,bas[i])*a[k]
                 mat1[i][j] = hub.hub(bas[j])*u + ext(bas[j]) + o
             else:
                 hop = hub.hopp(bas[j])
