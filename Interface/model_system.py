@@ -48,6 +48,7 @@ def model():
         print("Invalid Choice")
         input("Press Enter...")
         return
+    ss.par_ready()
     ss.invalidate_ham()
     ss.invalidate_ep()
 
@@ -86,6 +87,10 @@ def sys():
 
         if ch == 1:
             ss.ses["sys"]["n"] = int(input("Number of Spin Orbitals : "))
+            n = ss.ses["sys"]["n"]
+            k = ss.ses["sys"]["k"]
+            if n is not None and k is not None:
+                ss.ses["sys"]["c"] = comb(n,k)
             ss.sys_ready()
             ss.invalidate_bas()
             ss.invalidate_ham()
@@ -93,6 +98,10 @@ def sys():
 
         elif ch == 2:
             ss.ses["sys"]["k"] = int(input("Number of Electrons : "))
+            n = ss.ses["sys"]["n"]
+            k = ss.ses["sys"]["k"]
+            if n is not None and k is not None:
+                ss.ses["sys"]["c"] = comb(n,k)
             ss.sys_ready()
             ss.invalidate_bas()
             ss.invalidate_ham()
@@ -117,7 +126,7 @@ def sys():
                 return
             n = ss.ses["sys"]["n"]
             k = ss.ses["sys"]["k"]
-            if n != None and k != None:
+            if n is not None and k is not None:
                 ss.ses["sys"]["c"] = comb(n,k)
             ss.sys_ready()
             ss.invalidate_ham()
@@ -138,12 +147,17 @@ def sys():
                 print("Invalid Choice")
                 input("Press Enter...")
                 return
+            ss.ses["par"]["a"] = None
+            ss.sys_ready()
+            ss.par_ready()
+            ss.invalidate_ham()
+            ss.invalidate_ep()
 
         elif ch == 5:
             coords = incords()
             ss.ses["sys"]["coords"] = coords
             ss.ses["sys"]["dis_mat"] = dis_mat(coords)
-            ss.sys_ready
+            ss.sys_ready()
             ss.invalidate_ham()
             ss.invalidate_ep()
             

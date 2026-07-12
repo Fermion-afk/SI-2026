@@ -20,11 +20,11 @@ def main_huckel():
             if i == j:
                 for k in range(n//2):
                     if ss.ses["sys"]["uni"] == "Yes":
-                        mat[i][j] = bi.nus(2*k,bas[i])*a
+                        mat[i][j] += bi.nus(2*k,bas[i])*a
                     else:
-                        mat[i][j] = bi.nus(2*k,bas[i])*a[k]
+                        mat[i][j] += bi.nus(2*k,bas[i])*a[k]
             else:
                 if hop is not None:
-                    mat[i][j] = hb.dp(bas[i], hop)*b             
+                    mat[i][j] += hb.dp(bas[i], hop)*b             
     return mat
 

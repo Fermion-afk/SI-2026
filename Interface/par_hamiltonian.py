@@ -40,10 +40,9 @@ def parameters():
             k = ss.ses["sys"]["uni"]
             if k == "Yes":
                 ss.ses["par"]["a"] = float(input("On-site Energy(eV) : "))
-            else:
+            elif k == "No":
                 m = ss.ses["sys"]["n"]//2
-                k = ss.ses["par"]["a"]
-                k = np.zeros((m,))
+                ss.ses["par"]["a"] = np.zeros((m,))
                 for i in range(m):
                     ss.ses["par"]["a"][i] = float(input(f"Input the value of onsite energy for {i}th site:"))
         elif ch == 2:
@@ -86,6 +85,9 @@ def hamiltonian():
         ch = int(input("Choice : "))
 
         if ch == 1:
+            if ss.ses["sys"]["status"] != "Configured":
+                print("Configure System First")
+                return
             import Basis_operations.basis as ba
             ss.ses["bas"]["bas"] = ba.binary_hash(ba.per(ss.ses["sys"]["n"],ss.ses["sys"]["k"]))
             ss.bas_ready()
@@ -94,8 +96,17 @@ def hamiltonian():
             if ss.ses["bas"]["status"] != "Created":
                 print("Construct Basis First")
                 return
+            if ss.ses["par"]["status"] != "Complete":
+                print("Configure Parameters First")
+                return
+            mod = ss.ses["mod"]["name"]
+            if mod is None:
+                print("Select Model First")
+                return
+            if mod in ("Extended Hubbard", "PPP") and ss.ses["sys"]["dis_mat"] is None:
+                print("Load Coordinates First")
+                return
             def ham_creator():
-                mod = ss.ses["mod"]["name"]
                 if mod == "Huckel":
                     import Hamiltonians.huckel as h
                     ss.ses["ham"]["mat"] = h.main_huckel()

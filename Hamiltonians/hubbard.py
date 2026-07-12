@@ -23,7 +23,7 @@ def hopp(l): #this gives the action of hopping term on bitstring of l
             x1,y1 = bi.ca(2*i+2,2*i,l)
             if y1 != None:
                 ce.append([x1,y1])   
-        if per:
+        if per == "Closed Ring":
             l_u = 2*(m - 1)
             f_u = 0
             x, y = bi.ca(f_u,l_u, l)
@@ -44,7 +44,7 @@ def hopp(l): #this gives the action of hopping term on bitstring of l
             x1,y1 = bi.ca(2*i+3,2*i+1,l)
             if y1 != None:
                 co.append([x1,y1])   
-        if per:
+        if per == "Closed Ring":
             last_dn = 2*(m - 1) + 1
             first_dn = 1
             x, y = bi.ca(first_dn, last_dn, l)

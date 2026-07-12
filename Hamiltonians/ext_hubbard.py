@@ -19,7 +19,7 @@ def ext(l):
     _,u,_,m,per,_,_,r = state_data()
     k1 = 0
     pairs = [(i, i+1) for i in range(m-1)]
-    if per:
+    if per == "Closed Ring":
         pairs.append((m-1, 0))
     for i,j in pairs:
         rij = r[i][j]

@@ -47,7 +47,7 @@ def main_ppp():
                 hop = hub.hopp(bas[j])
                 if hop is not None:
                     val = hub.dp(bas[i], hop)*b
-                    mat1[i][j] = val
-                    mat1[j][i] = val
+                    mat1[i][j] += val
+                    mat1[j][i] += val
     return mat1
 

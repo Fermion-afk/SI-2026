@@ -1,5 +1,6 @@
 import os
 import sys
+import traceback
 
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if ROOT_DIR not in sys.path:
@@ -54,9 +55,12 @@ while True:
             case 7:
                 break   
     except Exception as e:
-        print("\nAn unexpected Error Occurred")
-        print(type(e).__name__)
-        print(e)
-
-        input("\nPress Enter to continue")
+        clear()
+        print("ERROR")
+        print()
+        print(f"Type    : {type(e).__name__}")
+        print(f"Message : {e}")
+        print()
+        traceback.print_exc()
+        input("\nPress Enter to continue...")
 
