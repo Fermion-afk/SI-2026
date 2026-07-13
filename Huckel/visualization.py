@@ -5,7 +5,6 @@ import matplotlib.patches as mpatches
 from matplotlib.colors import Normalize
 from matplotlib.cm import ScalarMappable
 import matplotlib.cm as cm
-from . import huckel_main
 
 def o_p(N):
     if N == 1: return [(0.0, 0.0)]
@@ -68,15 +67,12 @@ def draw_mo(ax, coeffs, x, N):
     ax.set_xlim(-xr, xr); ax.set_ylim(-yr, yr)
     ax.set_aspect('equal'); ax.axis('off')
 
-def p_o(N, x, tol=1e-6):
-    fun_x = "0" if x == "o" else ("1" if x == "c" else x)
-    lams, vecs = huckel_main.fun(N, fun_x)
+def p_o(N, x, evals, evecs, tol=1e-6):
+    lams = np.asarray(evals)
+    vecs = np.asarray(evecs)
 
-    # ensure energies are ordered (most bonding/lowest first → most
-    # antibonding/highest last), since huckel_main.fun doesn't guarantee this
-    order = np.argsort(lams)[::-1]      # descending lam = ascending energy (E = α + λβ, β<0)
-    lams  = [lams[k] for k in order]
-    vecs  = [vecs[k] for k in order]
+    # huckel_main.fun already returns eigenpairs in the desired order,
+    # so keep them aligned without re-sorting them here.
 
     # group degenerate levels (index 0 = lowest energy)
     groups, i = [], 0
