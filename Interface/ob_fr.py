@@ -105,36 +105,11 @@ def sos():
         print("Diagonalize Hamiltonian First")
         pause()
         return
-    ch = select_sus()
 
-    if ch == 1:
-        st = state_choice()
-        if st == None:
-            return
-        # Call SOS Polarizability
-        pause()
-
-    elif ch == 2:
-        st = state_choice()
-        if st == None:
-            return
-        # Call SOS First Hyperpolarizability
-        pause()
-
-    elif ch == 3:
-        st = state_choice()
-        if st == None:
-            return
-        # Call SOS Second Hyperpolarizability
-        pause()
-
-    elif ch == 4:
-        return
-
-    else:
-        print("Invalid Choice")
-        pause()
-        return
+    eval = ss.ses["ep"]["evals"]
+    evec = ss.ses["ep"]["evecs"]
+    import SOS as fr
+    fr.run(eval,evec)
 
 def finite_difference():
     while True:

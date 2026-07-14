@@ -1,6 +1,4 @@
-import config as con
 import Basis_operations.operators as op
-import main_1 
 import numpy as np
 from functools import cache
 

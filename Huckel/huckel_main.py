@@ -70,9 +70,22 @@ else:
 
 evals, evecs = hu_main(N, per)
 
-if N % 2 == 0:
-    gap = -(evals[N//2] - evals[(N//2)-1])
+if x == 0:
+    if N % 2 == 0:
+        print(evals)
+        gap = -(evals[N//2] - evals[(N//2)-1])
+    else:
+        print(evals)
+        gap = -(evals[(N//2)+1] - evals[N//2])
+elif x == 1:                     
+    if N % 4 == 2:
+        print(evals)
+        gap = -(evals[N//2] - evals[(N//2)-1])
+    else:      
+        print(evals)             
+        homo = evals[(N//2)-1]
+        lumo = evals[(N//2)+1]
+        gap = -(lumo - homo)
 else:
-    gap = -(evals[(N//2)+1] - evals[N//2])
-
+    gap = 0
 print(f"The HOMO-LUMO gap : {gap}")
