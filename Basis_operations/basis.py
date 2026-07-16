@@ -53,10 +53,8 @@ def per(x,y):
   #Base cases
   if y < 0 or y > x:
     return []
-
   if x == 0:
     return [[]]
-
   if x == 1:
     if y == 0:
       return [[0]]
@@ -64,10 +62,8 @@ def per(x,y):
       return [[1]]
     else:
       return []
-
   if y == 0:
     return [[0]*x]
-
   if x == y:
     return [[1]*x]
 
@@ -77,11 +73,9 @@ def per(x,y):
 
     a = per(x//2, y-i)
     b = per(x - x//2, i)
-
     for p in a:
       for q in b:
         c.append(p+q)
-
   return c
 
 """this function takes the basis set and creates a hash with entries being the corresponding integer

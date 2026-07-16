@@ -1,73 +1,91 @@
 import math
 import cmath
 import numpy as np
-from . import visualization as vis
-import config as con
+import visualization as vis
 
-def fun(N,x):
-  if x == "0":
-    eval = []
-    for i in range(N):
-      eval.append(2*math.cos((i+1)*math.pi*(1.0/(N+1))))
-    evec = []
-    l = []
-    for i in range(N):
-      for j in range(N):
-        l.append((math.sqrt(2*(1.0/(N+1))))*math.sin((j+1)*(i+1)*math.pi*(1.0/(N+1))))
-      evec.append(l)
-      l = []
-    return eval,evec
-  elif x == "1":
-    eval = []
-    for k in range(N):
-        eval.append(2*math.cos(2*math.pi*k/N))
-
-    evec = []
-
-    for k in range(N):
+def fun(N, x):
+    if x == "Open Chain":
+        evals = []
+        for i in range(N):
+            evals.append(2*math.cos((i+1)*math.pi/(N+1)))
+        evecs = []
         l = []
         for i in range(N):
-            l.append(cmath.exp(2j*math.pi*i*k/N) / math.sqrt(N))
-        evec.append(l)
+            for j in range(N):
+                l.append(math.sqrt(2/(N+1))*math.sin((j+1)*(i+1)*math.pi/(N+1)))
+            evecs.append(l)
+            l = []
 
-    return eval, evec
-  else :
-     raise ValueError("enter either o or c")
+    elif x == "Closed Ring":
+        evals = []
+        for k in range(N):
+            evals.append(2*math.cos(2*math.pi*k/N))
+        evecs = []
+        for k in range(N):
+            l = []
+            for i in range(N):
+                l.append(cmath.exp(2j*math.pi*i*k/N)/math.sqrt(N))
+            evecs.append(l)
+    else:
+        raise ValueError("Enter either 'Open Chain' or 'Closed Ring'.")
+
+    evals = np.array(evals)
+    evecs = np.array(evecs)
+    order = np.argsort(evals)[::-1]
+    evals = evals[order]
+    evecs = evecs[order]
+    return evals, evecs
 
 def fun_n(m):
-    m = np.array(m, dtype=int)
-  
-    eval, evec = np.linalg.eigh(m)
-  
-    eval[abs(eval) < 1e-10] = 0
-    evec[abs(evec) < 1e-10] = 0
-  
-    return eval,evec
+    m = np.asarray(m, dtype=float)
+    evals, evecs = np.linalg.eigh(m)
+    evals[np.abs(evals) < 1e-10] = 0
+    evecs[np.abs(evecs) < 1e-10] = 0
+    return evals, evecs
 
-def hu_main():
-    x = con.m
-    y = con.x_huc
-    if y == "0" or y == "1":    
-        eval,evec = fun(x,y)
-        b = input("visualize the orbitals(y/n):").strip().lower()
-        if not(b=="y") and not(b=="n"):
-            print("invalid input,enter either(y/n):")
-        if b == "y":
-          # visualization expects 'o' (open) or 'c' (closed);
-          # map the numeric input to the expected characters
-          vis_key = 'o' if y == "0" else ('c' if y == "1" else y)
-          vis.p_o(x, vis_key)
-        elif b == "n":
-            print(eval)
-            print(evec)
-    elif y == "2":
-        n = con.m
-        print("input the adjacency matrix")
-        m = [] 
-        for i in range(n): 
-            row = input(f"Row {i+1}: ").split() 
-            m.append(row)
-        eval,evec = fun_n(m)
-        print(eval)
-        print(evec)
+def hu_main(N, per):
+    evals, evecs = fun(N, per)
+    while True:
+        b = input("Visualize the orbitals (Yes/No): ")
+        if b == "Yes":
+            vis_key = "o" if per == "Open Chain" else "c"
+            vis.p_o(N, vis_key, evals, evecs)
+            break
+        elif b == "No":
+            break
+        else:
+            print("Invalid input. Enter either Yes or No.")
+    return evals, evecs
 
+
+N = int(input("Enter the number of atoms: "))
+x = int(input("Is the system Open or Closed (0/1): "))
+
+if x == 0:
+    per = "Open Chain"
+elif x == 1:
+    per = "Closed Ring"
+else:
+    raise ValueError("Enter either 0 (Open Chain) or 1 (Closed Ring).")
+
+evals, evecs = hu_main(N, per)
+
+if x == 0:
+    if N % 2 == 0:
+        print(evals)
+        gap = -(evals[N//2] - evals[(N//2)-1])
+    else:
+        print(evals)
+        gap = -(evals[(N//2)+1] - evals[N//2])
+elif x == 1:                     
+    if N % 4 == 2:
+        print(evals)
+        gap = -(evals[N//2] - evals[(N//2)-1])
+    else:      
+        print(evals)             
+        homo = evals[(N//2)-1]
+        lumo = evals[(N//2)+1]
+        gap = -(lumo - homo)
+else:
+    gap = 0
+print(f"The HOMO-LUMO gap : {gap}")

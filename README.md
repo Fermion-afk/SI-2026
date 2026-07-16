@@ -1,74 +1,133 @@
-### Units 
-1. $t$, $U$,$V_{ij}$ and the energy eigenvalues $\rightarrow$ eV  
-2. Bond lenghts and coordinates $\rightarrow$ $\AA$
-3. Electric field $\rightarrow$ $e/{\AA}^{-2}$
-4. Dipole Moment $\rightarrow$ $e\AA$
-5. Polarizability $\rightarrow$ $e\AA^2/V$
-6. First and second hyperpolarizability $\rightarrow$ $e\AA^3/V^2$ and $e\AA^4/V^3$ respectively   
+# Documentation of Semi Emperical Hamiltonian Model for Conjugated Systems Codebase
 
-#### Conversion factors
-$(e\AA^2/V)$ $\rightarrow$ S.I : $C^2m^2/J$ ; $1/4\pi\epsilon_0 \rightarrow $ S.I: $Jm/C^2$ 
-  
-$\alpha(\AA^3) = \alpha(SI)/4\pi\epsilon_0$
+<!-- DOCUMENTATION VERSION: 1.0.0 -->
+<!-- Feel free to update, reorder, or append sections as needed. Extension hooks are marked using comments. -->
 
-- $1(\alpha(e\AA^2/V)) = 14.3996(\alpha(\AA^3))$
-- $1(\alpha(e\AA^2/V)) = 3.57(\alpha(a.u))$
-- $1(\beta(e\AA^3/V^2)) = 4.997\times10^3(\beta(a.u))$
-- $1(\gamma(e\AA^4/V^3)) = 2.5695\times10^5(\gamma(a.u))$
+## 1. Overview
 
-### Conventions and Constants
-1. Ohno constant = 14.397 ev.$\AA$
-1. $t$ the hopping parameter is taken to be negative, U intrasite repulsion parameter is taken to be positive  
-2. we index the spin orbitals as 0,1,2...n-1 if n is the number of spin orbitals, the 0th orbital is $\alpha$ spin orbital   
-3. 
+This codebase is a Python framework designed for quantum chemistry calculations of finite conjugated systems. It utilizes many-body Fock-space representations under the second quantization formalism, allowing for the configuration, construction, and exact diagonalization of semi-empirical Hamiltonian models.
 
-### Standard Parameters used in Literature
-1. U = 8eV and t = -2.4eV 
-2. U = 11.13eV and t = -2.4eV
+### Hamiltonian Models
+The codebase supports the following Hamiltonian models:
+* **Hückel Model:** Tight-binding model accounting only for site-specific on-site energies ($\alpha_i$) and nearest-neighbor hopping parameters ($\beta$).
+* **Hubbard Model:** Incorporates on-site electron-electron repulsion ($U$) to account for Coulombic cost on doubly-occupied spatial sites.
+* **Extended Hubbard Model:** Adds nearest-neighbor Coulomb repulsion ($V_{ij}$) parameterized using distance-dependent Ohno or Mataga-Nishimoto (MN) potentials.
+* **PPP (Pariser-Parr-Pople) Model:** Adds long-range Coulomb repulsion ($V_{ij}$) between all pairs of spatial sites, parameterized using Ohno or MN potentials.
 
-## Structure of this Repo
-there are three folder in this repo 
-1) __Huckel__ 
-2) __Hamiltonians__
-3) __Basis_operations__
+### Observables & Properties
+For any calculated state (including the ground state and excited states), the codebase can compute:
+* **Energy Eigenvalues and Eigenstates (Eigenvectors)**
+* **Double Occupancy:** Average number of doubly-occupied spatial sites.
+* **Dipole Moment:** Longitudinal dipole moment components ($\mu_x$, $\mu_y$).
+* **Electron Density:** Local charge density $\langle n_i \rangle$ at each spatial site.
+* **Density-Density Correlation Matrix:** Charge-charge correlations between different spatial sites ($C_{ij} = \langle n_i n_j \rangle - \langle n_i \rangle \langle n_j \rangle$).
+* **Finite Field Responses:** Polarizability ($\alpha$), first hyperpolarizability ($\beta$), and second hyperpolarizability ($\gamma$) computed via:
+  * **Sum Over States (SOS)** Rayleigh - Schrodinger perturbation theory.
+  * **Finite Difference** Stark-shift re-diagonalization.
+  * **Perturbed State Properties:** Evaluation of any of the above observables under arbitrary external static electric fields ($F_x$, $F_y$).
 
-### Huckel
+---
 
-1) __huckel_main.py__ contains the code for analytical solution of the huckel matrix for a given value of n(number of atoms) and type of system(more info look at the config.hu()) 
+## 2. Directory Structure
 
-2) __visualization.py__ contains the code for visualising the obtained solution from the previous file 
+The codebase is organized into modular directories tailored for specific functions. Below is a detailed description of each folder and file.
+
+### Interface
+This folder contains the files managing user interaction, session state tracking, and orchestration of the whole workflow of a calculation of session.
+
+* **[Interface/session.py]**
+  * *Functionality:* Declares and initializes the global session dictionary (`ses`). It acts as a central state manager tracking active model choices, system parameters (sites, electrons, boundary conditions, coordinates, distances), parameter values (hopping, repulsions), basis configurations, Hamiltonian matrix state, and calculated eigenpairs. Provides invalidation functions to reset dependent functionality if inputs from user change(System parameters, emperical parameters)
+* **[Interface/run_c.py]**
+  * *Functionality:* The main executable script that loads the session and launches the interactive menu loop. Guides users through system configuration, parameter input, diagonalization, and property evaluation.
+* **[Interface/model_system.py]**
+  * *Functionality:* Handles interactive input menus for selecting the Hamiltonian model and defining system characteristics (number of spin orbitals, electrons, periodic boundary conditions, uniformity, and coordinate loading for distance matrix calculations).
+* **[Interface/par_hamiltonian.py]**
+  * *Functionality:* Configures emperical parameters (alpha, beta, U, and Ohno/MN repulsion strings). Drives basis set construction, Hamiltonian matrix generation, and full or sparse (lowest-$k$) diagonalization.
+* **[Interface/ob_fr.py]**
+  * *Functionality:* Coordinates calculation of observables and finite-field responses. Allows running SOS calculations, Finite Difference calculations, and recursive Stark-shift calculations where observables are evaluated for a state under a custom field.
 
 ### Basis_operations
+Contains the underlying algebraic machinery for basis set generation and second-quantization operations.
 
-1) __basis.py__ contains the code for generating basis for given __n__(no. of spin orbitals) and __k__(no. of electrons).  
-it can create CIS,CISD,CISDT and FullCI basis sets , though in most case we use the FullCI basis
+* **[Basis_operations/basis.py]**
+  * *Functionality:* Generates the Fock-space basis set. Supports CIS, CISD, CISDT, and Full CI (FCI) basis generation. Features `binary_hash` which maps state lists to binary integer representations for rapid bitwise execution.
+* **[Basis_operations/binary.py]**
+  * *Functionality:* Implements second-quantization operators. Defines creation ($c^\dagger$), annihilation ($c$), and number operators ($n_i$, $n_{i\sigma}$) using bit-manipulation of binary integers representing occupations. Tracks fermion exchange phases.
+* **[Basis_operations/com.py]**
+  * *Functionality:* Provides an alternative Combinadic-Hash based basis set creation and indexing mechanism. through this Hash is not being used extensevily in this CodeBase due to relative performance with Binary-Hash
+* **[Basis_operations/operators.py]**
+  * *Functionality:* Computes expectation values ($\langle \psi | \hat{O} | \psi \rangle$) and transition matrix elements ($\langle \psi_a | \hat{O} | \psi_b \rangle$) for physical observables including double occupancy, dipole components, local density, and density-density correlations.
 
-2) __binary.py__ 
-binary_hash() creates the binary hash for basis set generated by previous file
-and all the other function in this file are implemented throught this hash  which includes
-function objects for creation and annihilation operator which are implemented by bit manipulations.  
-for more info on internal working of function see __binary_operation.md__
+* **[SOS.py]**
+  * *Functionality:* Implements the Sum Over States (SOS) formulas to calculate polarizability and hyperpolarizabilities from eigenvalues and transition dipole matrices.  
 
-3) __com.py__ Combinadic is a alternate hash function for combination of fixed __n__ and __k__ values , this file contains function which use this hash function to create and manipulate basis set 
-it has similar function as __binary.py__ but implemented through Combinadic hash
+###  Hamiltonians
+Handles many-body matrix construction for the respective physical models.
 
-4) __Diagonalization.py__ contains function to diagonalize matrix 
-    
-5) __operator.py__
+* **[Hamiltonians/huckel.py]**
+  * *Functionality:* Generates the Hückel Hamiltonian matrix in the many-body basis.
+* **[Hamiltonians/hubbard.py]**
+  * *Functionality:* Generates the Hubbard Hamiltonian matrix. Serves as the provider of the core nearest-neighbor hopping function (`hopp`) and matrix phase checker (`dp`) reused by other models.
+* **[Hamiltonians/ext_hubbard.py]**
+  * *Functionality:* Generates the Extended Hubbard Hamiltonian matrix by incorporating nearest-neighbor Ohno/MN Coulomb repulsion.
+* **[Hamiltonians/ppp.py]**
+  * *Functionality:* Generates the PPP Hamiltonian matrix by incorporating long-range Ohno/MN Coulomb repulsion between all spatial site pairs.
 
-### Hamiltonians
+### Huckel
+A dedicated folder for the single-particle analytical solution of the Hückel model.
 
-1) __hubbard.py__ this contains function to create hubbard matrix for a given values of __hopping parameter($t$)__ and __intrasite repulsion parameter($U$)__  
+* **[Huckel/huckel_main.py]**
+  * *Functionality:* Standalone execution script to analytically solve open chains and closed rings, compute the HOMO-LUMO energy gap, and trigger molecular orbital visualizations.
+* **[Huckel/visualization.py]**
+  * *Functionality:* Visualizes energy level spectra and maps MO coefficients as colored lobes (representing phases) on 2D coordinates using Matplotlib.
 
-2) __ext_hubbard.py__ this contain functions which adds nearest neighbour coloumbic term on top of the hubbard matrix obtained form previous file to give the extended hubbard matrix
+### Other Root Files
+* **[requirements.txt]**
+  * *Functionality:* Lists the Python package dependencies (e.g. numpy, scipy, matplotlib).
 
-3) __ppp.py__ similar to the __ext_hubbard.py__ file this contains function for long range coloumbic term 
+<!-- EXTENSION POINT: Add new file references here -->
 
-### config.py
-this file contains all the neccesary variable obtained from user,predefined constants  
-other files access these variable by importing this file as a module for further calculations
+---
 
-### main.py
-__main.py__  imports other files as module and provides access to all possible functionality of this repository  
-functionality pertaining to each purpose are invoked based on first choice of user  
-neccesary value are prompted to be entered by user through means of function object from __config__ module
+## 3. Workflow
+
+The codebase supports two distinct operational workflows.  
+First the main workflow for many-Body CI calculation and a standalone workflow for analytical calculation using Huckel Hamiltonian which provides capability to visualize the eigenpairs
+
+### Workflow A: Many-Body CI Calculations (via run_c.py)
+
+```mermaid
+graph TD
+    A[Start run_c.py] --> B[1. Select Hamiltonian Model]
+    B --> C[2. Configure System Parameters]
+    C --> D[3. Define Hamiltonian Parameters]
+    D --> E[4. Construct Basis]
+    E --> F[5. Construct Hamiltonian Matrix]
+    F --> G[6. Diagonalize Matrix]
+    G --> H[7. Compute Observables or Responses]
+```
+
+1. **Model Selection:** The user selects Huckel, Hubbard, Extended Hubbard, or PPP.
+2. **System Configuration:** User inputs spin orbitals ($N$) and electrons ($K$). They choose Open vs. Closed boundary conditions, Uniformity, and optionally load 2D spatial coordinates. 
+3. **Parameterization:** Values for on-site energy ($\alpha$), hopping ($\beta$), on-site repulsion ($U$), and long-range parameterizations (Ohno vs. MN) are assigned.
+4. **Basis Construction:** The many-body Fock-space states are generated and hashed into integers using bit representations.
+5. **Hamiltonian Assembly:** The matrix is constructed by evaluating hopping and Coulomb repulsion terms in the Fock basis.
+6. **Diagonalization:** The matrix is diagonalized using standard dense methods (numpy.linalg.eigh) or sparse iteration (scipy.sparse.linalg.eigsh) to obtain eigenvalues and eigenvectors.
+7. **Property Evaluation:** The calculated states are passed to compute observables or field responses (SOS or Finite Difference).
+
+---
+
+### Workflow B: Standalone Analytical Hückel Calculations (via huckel_main.py)
+
+1. **Input Setup:** The user runs `huckel_main.py` directly and inputs the number of atoms ($N$) and chain geometry (Open Chain vs. Closed Ring).
+2. **Analytical Evaluation:** The script computes energy levels and coefficients using exact analytical formulas:
+   * Open Chain: $E_j = 2\beta \cos\left(\frac{j \pi}{N+1}\right)$
+   * Closed Ring: $E_k = 2\beta \cos\left(\frac{2 \pi k}{N}\right)$
+3. **GAP and Visualization:** The HOMO-LUMO gap is printed, and the user can request orbital mapping. If requested, a plot of energy levels and MO shapes is generated and saved as a PNG.
+
+---
+
+The Markdown file **[par_units.md]** contains the units and conventions used in this codebase and provides standard parameters to run calculations 
+
+
+<!-- EXTENSION POINT: Add further customization instructions, troubleshooting guides or notes below -->
