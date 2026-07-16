@@ -115,7 +115,7 @@ def sos():
 
     eval = ss.ses["ep"]["evals"]
     evec = ss.ses["ep"]["evecs"]
-    import SOS as fr
+    import Basis_operations.SOS as fr
     fr.run(eval,evec)
 
 def finite_difference():
