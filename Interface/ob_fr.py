@@ -29,16 +29,7 @@ def state_choice():
     else:
         return None
     
-def select_sus():
-    print()
-    print("1. Polarizability")
-    print("2. First Hyperpolarizability")
-    print("3. Second Hyperpolarizability")
-    print("4. Back")
-    print()
-    return int(input("Choice : "))
-
-def observables():
+def observables(evals,evecs):
     while True:
         clear()
         if ss.ses["ep"]["evecs"] is None:
@@ -46,9 +37,6 @@ def observables():
             pause()
             return
         
-        evals = ss.ses["ep"]["evals"]
-        evecs = ss.ses["ep"]["evecs"]
-
         print("="*63)
         print("                     Observables")
         print("="*63)
@@ -62,35 +50,54 @@ def observables():
         ch = int(input("Choice : "))
 
         if ch == 1:
-            st = state_choice()
-            if st == None:
-                return
-            print(op.expval(op.double_occ,evecs[:,st]))
-            pause()
+            if evecs.ndim == 1:
+                print(op.expval(op.double_occ,evecs))
+                pause()
+            else:
+                st = state_choice()
+                if st == None:
+                    return
+                print(op.expval(op.double_occ,evecs[:,st]))
+                pause()
         
         elif ch == 2:
-            st = state_choice()
-            if st == None:
-                return
-            x = op.expval(op.dm_x,evecs[:,st])
-            y = op.expval(op.dm_y,evecs[:,st])
-            print(f"x component of dipole Moment:{x}")
-            print(f"y component of dipole Moment:{y}")
-            pause()
+            if evecs.ndim == 1:
+                x = op.expval(op.dm_x,evecs)
+                y = op.expval(op.dm_y,evecs)
+                print(f"x component of dipole Moment:{x}")
+                print(f"y component of dipole Moment:{y}")
+                pause()
+            else:
+                st = state_choice()
+                if st == None:
+                    return
+                x = op.expval(op.dm_x,evecs[:,st])
+                y = op.expval(op.dm_y,evecs[:,st])
+                print(f"x component of dipole Moment:{x}")
+                print(f"y component of dipole Moment:{y}")
+                pause()
 
         elif ch == 3:
-            st = state_choice()
-            if st == None:
-                return
-            print(op.e_d(evecs[:,st]))
-            pause()
+            if evecs.ndim == 1:
+                print(op.e_d(evecs))
+                pause()
+            else:
+                st = state_choice()
+                if st == None:
+                    return
+                print(op.e_d(evecs[:,st]))
+                pause()
 
         elif ch == 4:
-            st = state_choice()
-            if st == None:
-                return
-            print(op.dd_corr(evecs[:,st]))
-            pause()
+            if evecs.ndim == 1:
+                print(op.e_d(evecs))
+                pause()
+            else:
+                st = state_choice()
+                if st == None:
+                    return
+                print(op.dd_corr(evecs[:,st]))
+                pause()
 
         elif ch == 5:
             return
@@ -118,6 +125,15 @@ def finite_difference():
             pause()
             return
         
+        def select_sus():
+            print()
+            print("1. Polarizability")
+            print("2. First Hyperpolarizability")
+            print("3. Second Hyperpolarizability")
+            print("4. Perturbed State Properties")
+            print()
+            return int(input("Choice : "))
+        
         ch = select_sus()
 
         def stark(x,y,i):
@@ -128,7 +144,7 @@ def finite_difference():
                 f = x*op.dm_x(bas[j]) + y*op.dm_y(bas[j])
                 mat[j,j] += f
             val,vec = np.linalg.eigh(mat)
-            return val[i],vec[:,i]
+            return val[i],vec[:,i]   
         
         if ch == 1:
             st = state_choice()
@@ -204,8 +220,14 @@ def finite_difference():
             pause()
 
         elif ch == 4:
-            return
+            st = state_choice()
+            x = float(input("enter the value of x field component:"))
+            y = float(input("enter the value of y field component"))
+            eval,evec = stark(x,y,st)
+            observables(eval,evec)
 
+        elif ch == 5:
+            return 
         else:
             print("Invalid Choice")
             pause()

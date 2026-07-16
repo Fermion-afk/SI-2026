@@ -49,7 +49,7 @@ while True:
             case 4:
                 ph.hamiltonian()
             case 5:
-                of.observables()
+                of.observables(ss.ses["ep"]["evals"],ss.ses["ep"]["evecs"])
             case 6:
                 of.finite_field()
             case 7:
